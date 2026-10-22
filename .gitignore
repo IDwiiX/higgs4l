@@ -13,3 +13,5 @@ report/*.bbl
 report/*.blg
 report/*.fls
 report/*.fdb_latexmk
+*.egg-info/
+build/

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "higgs4l"
+version = "0.1.0"
+description = "H -> ZZ* -> 4 leptons with the ATLAS 13 TeV Open Data for education"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "atlasopenmagic",
+    "uproot",
+    "awkward",
+    "vector",
+    "numpy",
+    "scipy",
+    "iminuit",
+    "pyhf",
+    "scikit-learn",
+    "matplotlib",
+    "mplhep",
+    "pyyaml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+markers = [
+    "phase1: selection and notebook reproduction",
+    "phase2: Higgs mass fit",
+    "phase3: profile-likelihood significance",
+    "phase4: machine-learning classifier",
+    "network: needs access to the ATLAS Open Data portal",
+]
