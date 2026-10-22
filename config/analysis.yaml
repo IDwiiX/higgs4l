@@ -10,14 +10,20 @@ samples:
   other_bkg: [410470, 410155, 410218, 410219, 412043, 364243, 364242, 364246, 364248,
               700320, 700321, 700322, 700323, 700324, 700325]
 
-weight_factors: [filteff, kfac, xsec, mcWeight, ScaleFactor_PILEUP, ScaleFactor_ELE,
-                 ScaleFactor_MUON, ScaleFactor_LepTRIGGER]
+# The notebook's stored outputs (P1-a, P1-d) predate commit eae7616, which added 346310.
+notebook_outputs_signal: [345060, 346228, 346311, 346312, 346340, 346341, 346342]
 
 notebook_selection:
   lep_pt_min: [20, 15, 10]
   lep_type_sums: [44, 48, 52]
   electron: {id: lep_isLooseID, iso: lep_isLooseIso}
   muon: {id: lep_isMediumID, iso: lep_isLooseIso}
+
+# Corrected selection: same lepton cuts with pT thresholds on pT-sorted leptons, then Z pairing.
+paired_selection:
+  mz: 91.1876
+  m12: [50, 106]
+  m34_min: 12
 
 histogram:
   m4l_min: 80

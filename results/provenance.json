@@ -1,0 +1,762 @@
+{
+ "release": "2025e-13tev-beta",
+ "skim": "exactly4lep",
+ "lumi_fb": 36.6,
+ "versions": {
+  "atlasopenmagic": "1.10.1",
+  "uproot": "5.7.7",
+  "awkward": "2.14.0",
+  "numpy": "2.5.4",
+  "python": "3.12.3"
+ },
+ "notebook": {
+  "url": "https://github.com/atlas-outreach-data-tools/notebooks-collection-opendata/blob/56f3ea775c2925199be8ef7e4ff7dff4662b2170/13-TeV-examples/uproot_python/HZZAnalysis.ipynb",
+  "commit": "56f3ea775c2925199be8ef7e4ff7dff4662b2170"
+ },
+ "files": [
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodD.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodD.exactly4lep.root",
+   "bytes": 2219662,
+   "sha256": "dd4ac1bb823a9dd908564485eb274504d955be7629386a5f2bf917a24129a954",
+   "entries": 3424,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodE.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodE.exactly4lep.root",
+   "bytes": 12275933,
+   "sha256": "e407ef246d7991c4e03d575756659a1bb44d1b8a907ed5f4ef60a13e895686d4",
+   "entries": 25092,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodF.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodF.exactly4lep.root",
+   "bytes": 8484460,
+   "sha256": "7337520fccfa26277cff417651c9e5a0433b1ec2fbcb5aed1b092906d260ef1c",
+   "entries": 16234,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodG.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodG.exactly4lep.root",
+   "bytes": 17643965,
+   "sha256": "c8eddd4c06c1da454917c306ddc0bac2bf53a4b1f9916aa24500228f1a3a1fb0",
+   "entries": 37101,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodH.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodH.exactly4lep.root",
+   "bytes": 5414463,
+   "sha256": "0ba9d5426551cb8f14d27663d148cfa7eae42c8a5ed6898dcb41b140de0b0701",
+   "entries": 12152,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data15_periodJ.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data15_periodJ.exactly4lep.root",
+   "bytes": 32441129,
+   "sha256": "1d0f42257e4e5ac20b0aec0d5283288d9e690d2123dd5b9fc33ed81aea0220d6",
+   "entries": 67630,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodA.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodA.exactly4lep.root",
+   "bytes": 15023271,
+   "sha256": "adc3236398d1b6175438c9b5f77f540f3e1a377d628899156030b0bd3e0042cb",
+   "entries": 29275,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodB.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodB.exactly4lep.root",
+   "bytes": 29991093,
+   "sha256": "b52f2d9351fc3b0cf0e9c1924f27d6d19c55d21caa37f675eb1748dd5f06e9f0",
+   "entries": 72544,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodC.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodC.exactly4lep.root",
+   "bytes": 38856748,
+   "sha256": "579195ea8a62a5f60a7bd2ec31c3dd6e37b08e3bbb6cd2e5830551306d64c6c5",
+   "entries": 91124,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodD.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodD.exactly4lep.root",
+   "bytes": 74725823,
+   "sha256": "8e05502fc2a38f0224b5576de3005f91799ef81a5de793f8e5e81ec271e0f915",
+   "entries": 174618,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodE.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodE.exactly4lep.root",
+   "bytes": 23061480,
+   "sha256": "20bca190a3d44fe47058a3d7ea1f9a1709c915a2d8adf31b1a02849831d1ec45",
+   "entries": 54896,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodF.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodF.exactly4lep.root",
+   "bytes": 50022281,
+   "sha256": "d9b43e5c02ce18b0ad6a2130b7fc267c88db97b79799f906c9713efd37c30a92",
+   "entries": 118615,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodG.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodG.exactly4lep.root",
+   "bytes": 55416187,
+   "sha256": "d4866c29659f304dd330a8dc646e5229efa908767c27025f9d93779293017a36",
+   "entries": 134798,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodI.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodI.exactly4lep.root",
+   "bytes": 84692319,
+   "sha256": "648d20c6bdb3532a0738532cdb75141f6264fa4a10a35d895ee30467aa5c1de3",
+   "entries": 205285,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodK.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodK.exactly4lep.root",
+   "bytes": 34518175,
+   "sha256": "a32552155e4684ede96f13b2c5ebdb233ccfcb308523e1e3d28a3d097ee51a97",
+   "entries": 84130,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": "data",
+   "file": "ODEO_FEB2025_v0_exactly4lep_data16_periodL.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_data16_periodL.exactly4lep.root",
+   "bytes": 97198909,
+   "sha256": "d7f9ac85252f0309268cb09ea6ff9e9806aa75d03640f07d5f426ec7a53412b4",
+   "entries": 235693,
+   "sum_of_weights": 1.0,
+   "xsec": 0.0,
+   "filteff": 0.0,
+   "kfac": 0.0
+  },
+  {
+   "did": 345060,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_345060.PowhegPythia8EvtGen_NNLOPS_nnlo_30_ggH125_ZZ4l.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_345060.PowhegPythia8EvtGen_NNLOPS_nnlo_30_ggH125_ZZ4l.exactly4lep.root",
+   "bytes": 182051943,
+   "sha256": "5b9628ccd88547cda07bb1b2ccd88c153d9b2e53bd119416df496ba11aa925a0",
+   "entries": 419943,
+   "sum_of_weights": 45231012.0,
+   "xsec": 28.3,
+   "filteff": 0.000124,
+   "kfac": 1.717,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.0060252964000000004,
+     "metadata": 0.006024
+    },
+    "effective_xsec_rel_diff": 0.0002152058432935977,
+    "sum_of_weights": {
+     "branch": 45231012.0,
+     "metadata": 45231011.19517517
+    }
+   }
+  },
+  {
+   "did": 346228,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346228.PowhegPy8EG_NNPDF30_AZNLOCTEQ6L1_VBFH125_ZZ4lep_notau.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346228.PowhegPy8EG_NNPDF30_AZNLOCTEQ6L1_VBFH125_ZZ4lep_notau.exactly4lep.root",
+   "bytes": 40376446,
+   "sha256": "948606848a168fd8a44b1ce2106f5b2339f46d5d22a5f8a96674dafd4059444f",
+   "entries": 86084,
+   "sum_of_weights": 1109796.5,
+   "xsec": 3.782,
+   "filteff": 0.000124,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.000468968,
+     "metadata": 0.000468425
+    },
+    "effective_xsec_rel_diff": 0.0011592037145753409,
+    "sum_of_weights": {
+     "branch": 1109796.5,
+     "metadata": 1109796.4665894508
+    }
+   }
+  },
+  {
+   "did": 346310,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346310.PowhegPythia8EvtGen_NNPDF30_AZNLO_ZH125J_Zincl_H_incl_MINLO.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346310.PowhegPythia8EvtGen_NNPDF30_AZNLO_ZH125J_Zincl_H_incl_MINLO.exactly4lep.root",
+   "bytes": 65117,
+   "sha256": "4d66bcb76514ffb778eb70d3b414438ec11279ee9a6848f24b3cc55de5f2ad56",
+   "entries": 44,
+   "sum_of_weights": 60171.441406,
+   "xsec": 0.7612,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.7612,
+     "metadata": 0.88390037736
+    },
+    "effective_xsec_rel_diff": -0.13881697587512842,
+    "sum_of_weights": {
+     "branch": 60171.441406,
+     "metadata": 60171.43924474716
+    }
+   }
+  },
+  {
+   "did": 346311,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346311.PowhegPythia8EvtGen_NNPDF30_AZNLO_WpH125J_Wincl_H_incl_MINLO.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346311.PowhegPythia8EvtGen_NNPDF30_AZNLO_WpH125J_Wincl_H_incl_MINLO.exactly4lep.root",
+   "bytes": 29402,
+   "sha256": "ffc23ba73542f3ae03517993c261ed587ea470adf8a6be76e10b3e9c4ba62e21",
+   "entries": 4,
+   "sum_of_weights": 43086.894531,
+   "xsec": 0.84,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.84,
+     "metadata": 0.8399999114
+    },
+    "effective_xsec_rel_diff": 1.0547620155065829e-07,
+    "sum_of_weights": {
+     "branch": 43086.894531,
+     "metadata": 43086.89650821686
+    }
+   }
+  },
+  {
+   "did": 346312,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346312.PowhegPythia8EvtGen_NNPDF30_AZNLO_WmH125J_Wincl_H_incl_MINLO.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346312.PowhegPythia8EvtGen_NNPDF30_AZNLO_WmH125J_Wincl_H_incl_MINLO.exactly4lep.root",
+   "bytes": 29245,
+   "sha256": "8c3097ffac6a7732a156e364f6f2dd993ee380c31945669eda3862a03e02f2c3",
+   "entries": 4,
+   "sum_of_weights": 21591.041016,
+   "xsec": 0.5328,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.5328,
+     "metadata": 0.53280025929
+    },
+    "effective_xsec_rel_diff": -4.866551683857523e-07,
+    "sum_of_weights": {
+     "branch": 21591.041016,
+     "metadata": 21591.041046380997
+    }
+   }
+  },
+  {
+   "did": 346340,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346340.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_allhad.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346340.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_allhad.exactly4lep.root",
+   "bytes": 5028335,
+   "sha256": "17f6b9f0443dd5439471093f48b09b00d5418b5645b81a491a5f47e895d33ab1",
+   "entries": 7146,
+   "sum_of_weights": 7161.775879,
+   "xsec": 0.5071,
+   "filteff": 5.7e-05,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 2.89047e-05,
+     "metadata": 2.7898649999999998e-05
+    },
+    "effective_xsec_rel_diff": 0.03606088466646251,
+    "sum_of_weights": {
+     "branch": 7161.775879,
+     "metadata": 7161.7760181427
+    }
+   }
+  },
+  {
+   "did": 346341,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346341.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_semilep.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346341.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_semilep.exactly4lep.root",
+   "bytes": 6732775,
+   "sha256": "b8f059ae4209785e6c22b54070c87ae88b2ac52a0e2ba4d6b0d75f0c5253f645",
+   "entries": 10072,
+   "sum_of_weights": 15755.763672,
+   "xsec": 0.5071,
+   "filteff": 5.6e-05,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 2.83976e-05,
+     "metadata": 2.7623555136e-05
+    },
+    "effective_xsec_rel_diff": 0.028021189169501026,
+    "sum_of_weights": {
+     "branch": 15755.763672,
+     "metadata": 15755.764117240906
+    }
+   }
+  },
+  {
+   "did": 346342,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_346342.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_dilep.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_346342.PowhegPy8EG_A14NNPDF23_NNPDF30ME_ttH125_ZZ4l_dilep.exactly4lep.root",
+   "bytes": 5886203,
+   "sha256": "d9abeb2985a93fb4f72a3a3537668993909d6f22a31f8a0d5cdfbac766373132",
+   "entries": 9332,
+   "sum_of_weights": 1641.523315,
+   "xsec": 0.5071,
+   "filteff": 1.1e-05,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 5.5781e-06,
+     "metadata": 6.943598e-06
+    },
+    "effective_xsec_rel_diff": -0.19665568196776373,
+    "sum_of_weights": {
+     "branch": 1641.523315,
+     "metadata": 1641.5232773423195
+    }
+   }
+  },
+  {
+   "did": 700600,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700600.Sh_2212_llll.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700600.Sh_2212_llll.exactly4lep.root",
+   "bytes": 5407367,
+   "sha256": "3d7588b897fc50a2342ef1d7b10f8c1b34f035456b2af215f62ad92525422789",
+   "entries": 11260,
+   "sum_of_weights": 8900161536.0,
+   "xsec": 1.2974,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 1.2974,
+     "metadata": 1.2974
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 8900161536.0,
+     "metadata": 8900161062.01826
+    }
+   }
+  },
+  {
+   "did": 410470,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_410470.PhPy8EG_A14_ttbar_hdamp258p75_nonallhad.exactly4lep.root",
+   "bytes": 16255158,
+   "sha256": "523d2c26eb72e15712b4898c02c4a27082038603143113fb91fda08dcbe350d8",
+   "entries": 13763,
+   "sum_of_weights": 24014984448.0,
+   "xsec": 729.77,
+   "filteff": 0.543797,
+   "kfac": 1.139756,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 452.30844922284757,
+     "metadata": 452.3081770013662
+    },
+    "effective_xsec_rel_diff": 6.018495690707226e-07,
+    "sum_of_weights": {
+     "branch": 24014984448.0,
+     "metadata": 24014984445.816772
+    }
+   }
+  },
+  {
+   "did": 410155,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_410155.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttW.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_410155.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttW.exactly4lep.root",
+   "bytes": 128712,
+   "sha256": "69ca5530e2848e981a65b17e768bfa6f3e78adba8da535461def6a4a9c5a9179",
+   "entries": 133,
+   "sum_of_weights": 54486.148438,
+   "xsec": 0.54822,
+   "filteff": 1.0,
+   "kfac": 1.096,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.6008491200000001,
+     "metadata": 0.6008491200000001
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 54486.148438,
+     "metadata": 54486.1498632431
+    }
+   }
+  },
+  {
+   "did": 410218,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_410218.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttee.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_410218.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttee.exactly4lep.root",
+   "bytes": 1738794,
+   "sha256": "14305f113f79a51661ec242db1769816375c59b5d93cac55cdc7b991e2631375",
+   "entries": 2735,
+   "sum_of_weights": 2585.219727,
+   "xsec": 0.036864,
+   "filteff": 1.0,
+   "kfac": 1.12,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.04128768000000001,
+     "metadata": 0.04128768000000001
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 2585.219727,
+     "metadata": 2585.2198036387563
+    }
+   }
+  },
+  {
+   "did": 410219,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_410219.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttmumu.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_410219.aMcAtNloPythia8EvtGen_MEN30NLO_A14N23LO_ttmumu.exactly4lep.root",
+   "bytes": 2790490,
+   "sha256": "9dbcd7a26dc3a177c79b89115c11520bcd7c2e2b96639d4b860e315f20d75c9a",
+   "entries": 4400,
+   "sum_of_weights": 4395.977051,
+   "xsec": 0.036865,
+   "filteff": 1.0,
+   "kfac": 1.12,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.04128880000000001,
+     "metadata": 0.04128880000000001
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 4395.977051,
+     "metadata": 4395.977054469287
+    }
+   }
+  },
+  {
+   "did": 412043,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_412043.aMcAtNloPythia8EvtGen_A14NNPDF31_SM4topsNLO.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_412043.aMcAtNloPythia8EvtGen_A14NNPDF31_SM4topsNLO.exactly4lep.root",
+   "bytes": 943776,
+   "sha256": "ec22a5ceba3360f73690cf1381a9e824ad5d4b31bdeb7163196ed210b1515781",
+   "entries": 1127,
+   "sum_of_weights": 1705.092529,
+   "xsec": 0.010673,
+   "filteff": 1.0,
+   "kfac": 1.1267,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.012025269100000001,
+     "metadata": 0.012025269100000001
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 1705.092529,
+     "metadata": 1705.092572228983
+    }
+   }
+  },
+  {
+   "did": 364243,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_364243.Sherpa_222_NNPDF30NNLO_WWZ_4l2v_EW6.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_364243.Sherpa_222_NNPDF30NNLO_WWZ_4l2v_EW6.exactly4lep.root",
+   "bytes": 3733703,
+   "sha256": "cb7306d034338b678cd887f21e57b0ec3f8e70828629a43b4e9f8b813bce4da7",
+   "entries": 7664,
+   "sum_of_weights": 580.135193,
+   "xsec": 0.001797,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.001797,
+     "metadata": 0.0017966
+    },
+    "effective_xsec_rel_diff": 0.00022264276967609575,
+    "sum_of_weights": {
+     "branch": 580.135193,
+     "metadata": 580.1351767694578
+    }
+   }
+  },
+  {
+   "did": 364242,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_364242.Sherpa_222_NNPDF30NNLO_WWW_3l3v_EW6.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_364242.Sherpa_222_NNPDF30NNLO_WWW_3l3v_EW6.exactly4lep.root",
+   "bytes": 309516,
+   "sha256": "9c46ee7eef5cbf59706f76329bf38d1204173a9ec7736665b12cd2699b325db4",
+   "entries": 470,
+   "sum_of_weights": 6265.554199,
+   "xsec": 0.007199,
+   "filteff": 1.0,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.007199,
+     "metadata": 0.0071985
+    },
+    "effective_xsec_rel_diff": 6.945891505161228e-05,
+    "sum_of_weights": {
+     "branch": 6265.554199,
+     "metadata": 6265.5541434027255
+    }
+   }
+  },
+  {
+   "did": 364246,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_364246.Sherpa_222_NNPDF30NNLO_WZZ_3l3v_EW6.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_364246.Sherpa_222_NNPDF30NNLO_WZZ_3l3v_EW6.exactly4lep.root",
+   "bytes": 147437,
+   "sha256": "181a725b50106ba3ca24bfe059e0605d4d194549c1b60157aab3eb096433b19a",
+   "entries": 220,
+   "sum_of_weights": 1637.637451,
+   "xsec": 0.001668,
+   "filteff": 0.44626,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 0.00074436168,
+     "metadata": 0.00074436168
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 1637.637451,
+     "metadata": 1637.6374399848282
+    }
+   }
+  },
+  {
+   "did": 364248,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_364248.Sherpa_222_NNPDF30NNLO_ZZZ_4l2v_EW6.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_364248.Sherpa_222_NNPDF30NNLO_ZZZ_4l2v_EW6.exactly4lep.root",
+   "bytes": 926028,
+   "sha256": "7df74f99fc06e7bd3dcfe45ade1065ea4d5eeb56605629bfe1af93a1ee451861",
+   "entries": 2006,
+   "sum_of_weights": 308.889282,
+   "xsec": 0.000385,
+   "filteff": 0.22426,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 8.63401e-05,
+     "metadata": 8.6418591e-05
+    },
+    "effective_xsec_rel_diff": -0.0009082652134423386,
+    "sum_of_weights": {
+     "branch": 308.889282,
+     "metadata": 308.8892946969718
+    }
+   }
+  },
+  {
+   "did": 700320,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700320.Sh_2211_Zee_maxHTpTV2_BFilter.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700320.Sh_2211_Zee_maxHTpTV2_BFilter.exactly4lep.root",
+   "bytes": 6833147,
+   "sha256": "5fff35464b4ed9b915b097a7996c0663152ebcc6a301138073b773a33d789103",
+   "entries": 9901,
+   "sum_of_weights": 13590815244288.0,
+   "xsec": 2221.2,
+   "filteff": 0.024936,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 55.38784319999999,
+     "metadata": 55.38770992799999
+    },
+    "effective_xsec_rel_diff": 2.4061655585772e-06,
+    "sum_of_weights": {
+     "branch": 13590815244288.0,
+     "metadata": 13590815498198.059
+    }
+   }
+  },
+  {
+   "did": 700321,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700321.Sh_2211_Zee_maxHTpTV2_CFilterBVeto.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700321.Sh_2211_Zee_maxHTpTV2_CFilterBVeto.exactly4lep.root",
+   "bytes": 19683661,
+   "sha256": "6b6594c4fa8a6f79a0fc7372b54f4a1cd2c32d95f25afb63d1851ca460f4b8ee",
+   "entries": 25201,
+   "sum_of_weights": 146340932091904.0,
+   "xsec": 2221.2,
+   "filteff": 0.129814,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 288.3428568,
+     "metadata": 288.3439674
+    },
+    "effective_xsec_rel_diff": -3.851649854280659e-06,
+    "sum_of_weights": {
+     "branch": 146340932091904.0,
+     "metadata": 146340931506490.44
+    }
+   }
+  },
+  {
+   "did": 700322,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700322.Sh_2211_Zee_maxHTpTV2_CVetoBVeto.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700322.Sh_2211_Zee_maxHTpTV2_CVetoBVeto.exactly4lep.root",
+   "bytes": 34195062,
+   "sha256": "be0b32d1ad7b04dd9e51f69ff0f40763d5adac2d069e66baca08e121c1d8f5d7",
+   "entries": 45787,
+   "sum_of_weights": 1195987495288832.0,
+   "xsec": 2221.2,
+   "filteff": 0.846072,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 1879.2951263999998,
+     "metadata": 1879.2953485199998
+    },
+    "effective_xsec_rel_diff": -1.1819323675332782e-07,
+    "sum_of_weights": {
+     "branch": 1195987495288832.0,
+     "metadata": 1195987492151594.8
+    }
+   }
+  },
+  {
+   "did": 700323,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700323.Sh_2211_Zmumu_maxHTpTV2_BFilter.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700323.Sh_2211_Zmumu_maxHTpTV2_BFilter.exactly4lep.root",
+   "bytes": 6521212,
+   "sha256": "9dbf67222f7222b6d4ef78b9683c2dd602b4fbfd7a7ef6ca0b8f5aab0dc0c799",
+   "entries": 9602,
+   "sum_of_weights": 12741689475072.0,
+   "xsec": 2221.3,
+   "filteff": 0.024394,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 54.1863922,
+     "metadata": 54.187258507
+    },
+    "effective_xsec_rel_diff": -1.598728232188318e-05,
+    "sum_of_weights": {
+     "branch": 12741689475072.0,
+     "metadata": 12741690203522.818
+    }
+   }
+  },
+  {
+   "did": 700324,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700324.Sh_2211_Zmumu_maxHTpTV2_CFilterBVeto.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700324.Sh_2211_Zmumu_maxHTpTV2_CFilterBVeto.exactly4lep.root",
+   "bytes": 19546630,
+   "sha256": "d13c758ca068b3a372edd72e999347969cb688ee3f0ac8f5490d29c5452b0977",
+   "entries": 25329,
+   "sum_of_weights": 146058376118272.0,
+   "xsec": 2221.3,
+   "filteff": 0.13003,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 288.835639,
+     "metadata": 288.835639
+    },
+    "effective_xsec_rel_diff": 0.0,
+    "sum_of_weights": {
+     "branch": 146058376118272.0,
+     "metadata": 146058373467803.72
+    }
+   }
+  },
+  {
+   "did": 700325,
+   "file": "ODEO_FEB2025_v0_exactly4lep_mc_700325.Sh_2211_Zmumu_maxHTpTV2_CVetoBVeto.exactly4lep.root",
+   "url": "https://opendata.cern.ch/eos/opendata/atlas/rucio/opendata/ODEO_FEB2025_v0_exactly4lep_mc_700325.Sh_2211_Zmumu_maxHTpTV2_CVetoBVeto.exactly4lep.root",
+   "bytes": 35789917,
+   "sha256": "471302a848b5845f7447a1ef377dcf793a282edad9a7ab09f977de878878d3be",
+   "entries": 47476,
+   "sum_of_weights": 1196323711746048.0,
+   "xsec": 2221.3,
+   "filteff": 0.846393,
+   "kfac": 1.0,
+   "metadata": {
+    "effective_xsec_pb": {
+     "branch": 1880.0927709,
+     "metadata": 1880.0925487700001
+    },
+    "effective_xsec_rel_diff": 1.181484390322396e-07,
+    "sum_of_weights": {
+     "branch": 1196323711746048.0,
+     "metadata": 1196323720518196.5
+    }
+   }
+  }
+ ]
+}
