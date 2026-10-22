@@ -30,3 +30,13 @@ histogram:
   m4l_max: 250
   bin_width: 2.5
   notebook_window: [122.5, 130.0]
+
+# Phase 2 mass fit. Shapes come from simulation only; the signal shape and calibration
+# use even eventNumber, leaving the odd half for the check on simulation (P2-b).
+mass_fit:
+  range: [110, 140]
+  m_true: 125.0
+  signal_shape_dids: [345060, 346228]  # H -> ZZ* -> 4l (ggH, VBF)
+  background_shape_dids: [700600]  # ZZ*
+  n_toys: 2000
+  seed: 20251023

@@ -147,3 +147,9 @@ def _insert_after(cuts: dict, after: str, name: str, cut) -> dict:
         if k == after:
             out[name] = cut
     return out
+
+
+def in_range(events: dict, lo: float, hi: float) -> dict[str, np.ndarray]:
+    """Selected events with lo <= m4l < hi."""
+    keep = (events["m4l"] >= lo) & (events["m4l"] < hi)
+    return {k: v[keep] for k, v in events.items()}

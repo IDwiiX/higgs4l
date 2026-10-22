@@ -1,0 +1,55 @@
+{
+ "pseudodata": {
+  "events": 165461,
+  "sum_weights": 62.5253724176673,
+  "signal": 40.57673373631301,
+  "background": 21.948638681354282
+ },
+ "fits": {
+  "nominal": {
+   "m_h": 125.14686892416196,
+   "n_s": 44.64879465005866,
+   "n_b": 17.829709145089236,
+   "hesse": 0.44184512978476675,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.44028539696090613,
+   "minos_upper": 0.44421279694580434,
+   "minos_valid": true,
+   "nll": -9.274374879984691
+  },
+  "gaussian_signal": {
+   "m_h": 125.37533321381635,
+   "n_s": 43.73890395505541,
+   "n_b": 18.780436884737764,
+   "hesse": 0.6171918580660289,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.6184229598202831,
+   "minos_upper": 0.6180709156847026,
+   "minos_valid": true,
+   "nll": -6.596500096335788
+  },
+  "all_background_shape": {
+   "m_h": 125.23681961354762,
+   "n_s": 43.36287415055115,
+   "n_b": 19.1342347726953,
+   "hesse": 0.4460480489112584,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.44489961971999886,
+   "minos_upper": 0.44919552935924717,
+   "minos_valid": true,
+   "nll": -9.84226649258455
+  }
+ },
+ "signal_closure": {
+  "m_h": 124.98888031345811,
+  "hesse": 0.006877002835118162
+ },
+ "m_hat_minus_true": 0.1468689241619643,
+ "expected_data_error": 0.49943052750982,
+ "mc_stat_error_approx": 0.255305906212989,
+ "shift_gaussian_signal": 0.22846428965438292,
+ "shift_all_background_shape": 0.08995068938565964
+}

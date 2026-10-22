@@ -7,7 +7,8 @@ measurement of the Higgs mass with a calibrated uncertainty, a profile-likelihoo
 and a gradient-boosted classifier whose gain in expected significance is measured on events it
 never saw.
 
-Status: phase 1 (selection and notebook reproduction) is done; phase 2 (mass fit) is next.
+Status: phases 1 (selection, notebook reproduction) and 2 (mass fit, validated on simulation;
+data not yet fitted) are done; phase 3 (profile-likelihood significance) is next.
 
 ## Results
 
@@ -24,6 +25,11 @@ All numbers are in the 122.5-130 GeV window used by the notebook, unless stated 
 | Asimov Z, 10% / 30% background uncertainty | 4.377 / 3.075 | same | same |
 | Asimov Z, corrected selection | 7.82 (S = 28.84, B = 6.64) | sorted pT + Z pairing, signed weights, 8 signal samples | same |
 | Data/MC in 180-250 GeV, corrected selection | 1.40 | signed weights | same |
+| Peak calibration δ = fitted DSCB mean − 125 GeV | −0.350 ± 0.010 GeV | DSCB fit, H→ZZ*→4ℓ simulation (even events) | `mass_model.py` → `results/mass_model.json` |
+| Expected uncertainty on m_H | 0.50 GeV | median MINOS error, 2000 toys at simulated yields | `mass_toys.py` → `results/mass_toys.json` |
+| Toy pulls (mean, width) | −0.010 ± 0.023, 1.013 ± 0.016; 0 failed fits | 2000 toys | same |
+| m_H fitted on held-out simulation | 125.15 GeV (generated 125.0; MC stat. ≈ 0.26, expected data error 0.50) | odd-event simulation as weighted pseudo-data | `mass_simulation.py` → `results/mass_simulation.json` |
+| Shift with a Gaussian signal shape / all-background shape | +0.23 / +0.09 GeV | same pseudo-data | same |
 
 The notebook's numbers are reproduced to machine precision. Its stored outputs come from 7 of
 the 8 signal samples now in the notebook (346310 was added later without rerunning). With all
@@ -53,6 +59,12 @@ finding are in `docs/learning/phase1.md`.
 - **Signal normalizations differ from the release metadata.** For 346310 and the ttH samples
   the file's cross-section differs from the release metadata by 3-20%. These samples are under
   3% of the signal in the window (`results/provenance.json`).
+- **The expected mass uncertainty is optimistic.** The 0.50 GeV comes from toys at
+  simulated yields. Data exceed simulation by a factor of 1.26 in 110-140 GeV
+  (`results/phase1.json`). A quarter of the simulated background there (6.6 of 27.6 events)
+  comes from three Z+jets events, one with weight 5.8 (`results/mass_model.json`).
+- **The calibration comes from one simulated mass point.** δ is measured at 125.0 GeV and
+  assumed to be the same nearby.
 - **Simplified selection.** It does not use the m4l-dependent m34 threshold, the ΔR cut or
   the J/ψ veto of the full ATLAS analysis.
 - **Partial blinding.** Data were plotted in phase 1. Blinding here means every later choice
@@ -68,6 +80,9 @@ python3 -m venv .venv
 .venv/bin/python scripts/select_events.py      # downloads about 1 GB, rebuilds data/selected
 .venv/bin/python scripts/phase1_numbers.py
 .venv/bin/python scripts/plot_m4l.py
+.venv/bin/python scripts/mass_model.py         # simulation only; freezes the fit model
+.venv/bin/python scripts/mass_toys.py          # 2000 toys, about 2 minutes
+.venv/bin/python scripts/mass_simulation.py    # needs the two outputs above
 ```
 
 ## Credits

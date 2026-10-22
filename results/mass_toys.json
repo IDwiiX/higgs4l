@@ -1,0 +1,15 @@
+{
+ "n_toys": 2000,
+ "n_failed": 0,
+ "pull_mean": -0.009722730487123877,
+ "pull_mean_error": 0.022643132380523,
+ "pull_width": 1.0126316645275213,
+ "pull_width_error": 0.0160151167333534,
+ "median_minos_error": 0.49943052750982,
+ "median_m_hat": 124.99302982037474,
+ "expected_yields": {
+  "signal": 39.09538473950775,
+  "background": 27.61435217005182
+ },
+ "seed": 20251023
+}
