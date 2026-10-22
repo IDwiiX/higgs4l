@@ -7,8 +7,8 @@ measurement of the Higgs mass with a calibrated uncertainty, a profile-likelihoo
 and a gradient-boosted classifier whose gain in expected significance is measured on events it
 never saw.
 
-Status: phases 1 (selection, notebook reproduction) and 2 (mass fit, validated on simulation;
-data not yet fitted) are done; phase 3 (profile-likelihood significance) is next.
+Status: phases 1 (selection, notebook reproduction) and 2 (mass fit, validated on simulation,
+then applied to data) are done; phase 3 (profile-likelihood significance) is next.
 
 ## Results
 
@@ -30,6 +30,14 @@ All numbers are in the 122.5-130 GeV window used by the notebook, unless stated 
 | Toy pulls (mean, width) | −0.010 ± 0.023, 1.013 ± 0.016; 0 failed fits | 2000 toys | same |
 | m_H fitted on held-out simulation | 125.15 GeV (generated 125.0; MC stat. ≈ 0.26, expected data error 0.50) | odd-event simulation as weighted pseudo-data | `mass_simulation.py` → `results/mass_simulation.json` |
 | Shift with a Gaussian signal shape / all-background shape | +0.23 / +0.09 GeV | same pseudo-data | same |
+| **m_H, data** | **125.06 +0.93 −0.92 GeV** (stat. only) | frozen model, 84 events in 110-140 GeV, MINOS | `mass_data.py` → `results/mass_fit.json` |
+| Fitted yields in data, N_s / N_b | 24.9 ± 7.9 / 59.1 ± 9.8 (simulation: 39.1 / 27.6) | same fit, Hesse errors | same |
+| Fit quality | Poisson deviance 5.9 for 9 d.o.f., p = 0.75 | 12 bins of 2.5 GeV | same |
+| Data / simulated S+B in 110-120, 120-130, 130-140 GeV | 16 / 16.7, 42 / 42.6, 26 / 7.4 | counts, signed weights | same |
+| Toys with an error ≥ 0.93 GeV | 0.9% at simulated yields; 30% at the data yields (median 0.78 GeV) | 2000 P2-a toys; 500 toys at the fitted yields, 2 MINOS failures kept | same |
+| Shift with a Gaussian signal shape / all-background shape, data | +0.91 / +0.41 GeV | same data | same |
+| P2-d: ATLAS, 36.1 fb⁻¹, 4ℓ | 124.79 ± 0.37 GeV; ours differs by +0.27 GeV | Phys. Lett. B 784 (2018) 345 | same |
+| P2-e: PDG average | 125.13 ± 0.11 GeV; ours differs by −0.07 GeV | PDG Live S126M, 2026 | same |
 
 The notebook's numbers are reproduced to machine precision. Its stored outputs come from 7 of
 the 8 signal samples now in the notebook (346310 was added later without rerunning). With all
@@ -39,6 +47,8 @@ Per-cut yields for both selections are in `results/cutflow.md`. The derivations 
 finding are in `docs/learning/phase1.md`.
 
 ![m4l, corrected selection](figures/m4l_paired.png)
+
+![Mass fit to data](figures/mass_fit_data.png)
 
 ## What phase 1 found
 
@@ -50,6 +60,31 @@ finding are in `docs/learning/phase1.md`.
 - **Z1/Z2 pairing removes no data event.** No selected data event is e⁺e⁺μ⁻μ⁻. The m12 and
   m34 cuts do the work.
 
+## What phase 2 found
+
+- **m_H = 125.06 +0.93 −0.92 GeV** (statistical only). It differs by +0.27 GeV from the ATLAS
+  four-lepton result on the same 2015-2016 data (124.79 ± 0.37 GeV), and by −0.07 GeV from
+  the PDG average (125.13 ± 0.11 GeV). Both differences are under a third of our error. The
+  ATLAS result uses the same collisions, so agreeing with it is not an independent test, and
+  the two errors cannot be added in quadrature. Our error is 2.5 times the ATLAS one; the
+  ATLAS analysis has a more complete selection and fit.
+- **The error is almost twice the expected 0.50 GeV, because the data have an excess at
+  130-140 GeV.** Below 130 GeV data and simulation agree (16 vs 16.7 events in 110-120 GeV,
+  42 vs 42.6 in 120-130 GeV), but 130-140 GeV has 26 events where simulation predicts 7.4.
+  The cause is not identified. The background shape is frozen, so the fit raises the
+  background level everywhere to follow this sideband: N_b = 59.1 ± 9.8 against 27.6
+  expected, and N_s = 24.9 ± 7.9 against 39.1, although the peak region itself matches
+  simulation. A smaller signal over a larger background widens the likelihood. Only 0.9% of
+  the toys at simulated yields have an error as large as 0.93 GeV. Toys at the fitted yields,
+  an a-posteriori diagnostic, give a median of 0.78 GeV, and 30% of them reach 0.93 GeV. The
+  model still describes the data: the Poisson deviance is 5.9 for 9 degrees of freedom
+  (p = 0.75).
+- **The shape choice matters at the level of the statistical error.** A Gaussian signal moves
+  m̂_H by +0.91 GeV, against +0.23 GeV on simulation. In toys at the fitted yields this
+  shift has a mean of +0.43 GeV and a spread of 0.67 GeV, so the data value is not unusual.
+  The all-background shape moves m̂_H by +0.41 GeV. Both are cross-checks of the frozen
+  model; neither is included as a systematic uncertainty.
+
 ## Limitations
 
 - **With signed weights the simulation is about 40% below data** where ZZ* dominates
@@ -59,10 +94,12 @@ finding are in `docs/learning/phase1.md`.
 - **Signal normalizations differ from the release metadata.** For 346310 and the ttH samples
   the file's cross-section differs from the release metadata by 3-20%. These samples are under
   3% of the signal in the window (`results/provenance.json`).
-- **The expected mass uncertainty is optimistic.** The 0.50 GeV comes from toys at
-  simulated yields. Data exceed simulation by a factor of 1.26 in 110-140 GeV
-  (`results/phase1.json`). A quarter of the simulated background there (6.6 of 27.6 events)
+- **Data depart from simulation at 130-140 GeV.** The expected 0.50 GeV holds for the
+  simulated yields; the data excess at 130-140 GeV doubles the fitted background and the
+  error becomes 0.93 GeV. A quarter of the simulated background in 110-140 GeV (6.6 of 27.6 events)
   comes from three Z+jets events, one with weight 5.8 (`results/mass_model.json`).
+- **No systematic uncertainty on m_H.** The lepton energy and momentum scales are not
+  varied. The calibration δ has an MC-statistical error of 0.01 GeV, which is negligible.
 - **The calibration comes from one simulated mass point.** δ is measured at 125.0 GeV and
   assumed to be the same nearby.
 - **Simplified selection.** It does not use the m4l-dependent m34 threshold, the ΔR cut or
@@ -83,6 +120,7 @@ python3 -m venv .venv
 .venv/bin/python scripts/mass_model.py         # simulation only; freezes the fit model
 .venv/bin/python scripts/mass_toys.py          # 2000 toys, about 2 minutes
 .venv/bin/python scripts/mass_simulation.py    # needs the two outputs above
+.venv/bin/python scripts/mass_data.py          # fit to data (unblinded), about 1 minute
 ```
 
 ## Credits

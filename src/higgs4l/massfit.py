@@ -127,6 +127,8 @@ def fit_mass(model: MassModel, m, w=None) -> dict:
         "n_s": minuit.values["n_s"],
         "n_b": minuit.values["n_b"],
         "hesse": minuit.errors["m_h"],
+        "n_s_error": minuit.errors["n_s"],
+        "n_b_error": minuit.errors["n_b"],
         "valid": minuit.fmin.is_valid,
         "accurate": minuit.fmin.has_accurate_covar,
         "minos_lower": np.nan,

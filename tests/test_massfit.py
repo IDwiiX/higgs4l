@@ -119,3 +119,21 @@ def test_signal_closure(cfg, frozen):
     )
     assert result["valid"]
     assert abs(result["m_h"] - cfg["mass_fit"]["m_true"]) < 3 * result["hesse"]
+
+
+def test_p2c_data_fit(cfg, frozen):
+    """P2-c on data: the nominal and cross-check fits converge, and the quoted values
+    match results/mass_fit.json."""
+    recorded = json.loads((ROOT / "results" / "mass_fit.json").read_text())
+    events = select(load_selected(["data"]), cfg, "paired")
+    m = in_range(events, *cfg["mass_fit"]["range"])["m4l"]
+    for signal, background in [
+        ("dscb", "nominal"),
+        ("gauss", "nominal"),
+        ("dscb", "all_backgrounds"),
+    ]:
+        result = fit_mass(load_model(frozen, signal, background), m)
+        assert result["valid"] and result["accurate"] and result["minos_valid"]
+    result = fit_mass(load_model(frozen), m)
+    for key in ("m_h", "minos_lower", "minos_upper", "n_s", "n_b"):
+        assert result[key] == pytest.approx(recorded["fits"]["nominal"][key], abs=1e-6)

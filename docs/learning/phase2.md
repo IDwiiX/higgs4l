@@ -151,3 +151,33 @@ hide.
   shape by +0.09 GeV. Both are well below the statistical uncertainty.
 - **MC-statistical error of P2-b.** The ≈ 0.26 GeV from the n_eff rescaling is approximate,
   because the pseudo-data mix very different weights.
+
+## 9. Result on data (unblind step)
+
+The frozen model was fitted once to the 84 data events in 110-140 GeV
+(`scripts/mass_data.py` → results/mass_fit.json): m_H = 125.06 +0.93 −0.92 GeV.
+
+- **Larger error than expected.** The fit finds N̂_s = 24.9 ± 7.9 and N̂_b = 59.1 ± 9.8,
+  against 39.1 and 27.6 in simulation (−1.8 and +3.2 standard deviations). Counting in
+  10 GeV ranges shows where this comes from. Data and simulated S+B agree in 110-120 GeV
+  (16 vs 16.7) and in 120-130 GeV (42 vs 42.6), but 130-140 GeV has 26 events against 7.4.
+  With the background shape frozen, the fit can only follow that sideband by raising N_b over
+  the whole range, which takes events out of the peak. Fewer signal events over more
+  background widen the likelihood.
+- **How unusual the error is.** Of the 2000 P2-a toys at simulated yields, 0.9% have a MINOS
+  error of 0.93 GeV or more. Toys at the fitted yields are an a-posteriori diagnostic: their
+  median error is 0.78 GeV and 30% reach 0.93 GeV. So the error is ordinary given the
+  yields, and the yields are what is unusual. Two of these 500 toys have a failed MINOS
+  (N̂_s = 6.3 and 3.1, one interval reaching the 140 GeV edge). They are counted as failures
+  and kept in the error fraction, and left out of the shape-shift statistics.
+- **Goodness of fit.** The binned Poisson deviance in 12 bins of 2.5 GeV is 5.9 for 9 degrees
+  of freedom (p = 0.75, approximate with these small counts). The frozen shapes describe the
+  data; it is the normalization that departs from simulation.
+- **Shape cross-checks.** A Gaussian signal shifts m̂_H by +0.91 GeV. In toys at the fitted
+  yields the same shift has a mean of +0.43 GeV and a spread of 0.67 GeV: with a peak of 25
+  events the two shapes weigh individual events differently enough to disagree by that much.
+  The all-background shape shifts m̂_H by +0.41 GeV.
+- **Comparison.** ATLAS (36.1 fb⁻¹, 4ℓ): 124.79 ± 0.37 GeV; PDG: 125.13 ± 0.11 GeV. The
+  differences are +0.27 and −0.07 GeV. The ATLAS result comes from the same collisions, so the
+  agreement is expected rather than an independent confirmation, and the two errors are not
+  combined in quadrature.

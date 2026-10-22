@@ -1,0 +1,117 @@
+{
+ "events": 84,
+ "fits": {
+  "nominal": {
+   "m_h": 125.06035886049901,
+   "n_s": 24.922802551442693,
+   "n_b": 59.092593465542954,
+   "hesse": 0.9276271838202916,
+   "n_s_error": 7.8567572818745965,
+   "n_b_error": 9.793362635530265,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.9224722418127369,
+   "minos_upper": 0.933816431263161,
+   "minos_valid": true,
+   "nll": -9.691687201328605
+  },
+  "gaussian_signal": {
+   "m_h": 125.9742034373992,
+   "n_s": 28.129912090198125,
+   "n_b": 55.88939103274766,
+   "hesse": 0.9582879661820485,
+   "n_s_error": 8.245240958513516,
+   "n_b_error": 9.786076507809987,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.9781042456319222,
+   "minos_upper": 0.9605707205427367,
+   "minos_valid": true,
+   "nll": -10.21944718643067
+  },
+  "all_background_shape": {
+   "m_h": 125.47086197969524,
+   "n_s": 24.59266865788454,
+   "n_b": 59.45792222437376,
+   "hesse": 0.9313733090978005,
+   "n_s_error": 7.854422797206727,
+   "n_b_error": 9.829340151253739,
+   "valid": true,
+   "accurate": true,
+   "minos_lower": -0.9520901334520536,
+   "minos_upper": 1.061424123686045,
+   "minos_valid": true,
+   "nll": -6.642241724564215
+  }
+ },
+ "m_h": 125.06035886049901,
+ "error_lower": -0.9224722418127369,
+ "error_upper": 0.933816431263161,
+ "expected_error": 0.49943052750982,
+ "fraction_expected_toys_error_at_least_observed": 0.009,
+ "expected_yields": {
+  "signal": 39.09538473950775,
+  "background": 27.61435217005182
+ },
+ "yield_pulls": {
+  "n_s": -1.8038717093578747,
+  "n_b": 3.2142423871131096
+ },
+ "data_vs_simulation": {
+  "edges": [
+   110,
+   120,
+   130,
+   140
+  ],
+  "data": [
+   16,
+   42,
+   26
+  ],
+  "signal": [
+   3.9642415874327197,
+   34.50190387631443,
+   0.6292392757605754
+  ],
+  "background": [
+   12.785660549834901,
+   8.05009995391893,
+   6.778591666297956
+  ]
+ },
+ "goodness_of_fit": {
+  "deviance": 5.907903197314262,
+  "ndof": 9,
+  "p_value": 0.7490992022540375
+ },
+ "toys_at_fitted_yields": {
+  "n_toys": 500,
+  "n_failed": 2,
+  "failed_n_s": [
+   6.277569795927917,
+   3.074307390627183
+  ],
+  "n_failed_gaussian_only": 0,
+  "median_error": 0.7819219452228157,
+  "fraction_error_at_least_observed": 0.298,
+  "gaussian_shift_mean": 0.43376366434207214,
+  "gaussian_shift_std": 0.6681750154109727
+ },
+ "shift_gaussian_signal": 0.913844576900189,
+ "shift_all_background_shape": 0.4105031191962354,
+ "references": {
+  "atlas_4l_36fb": {
+   "m_h": 124.79,
+   "error": 0.37
+  },
+  "pdg_2026": {
+   "m_h": 125.13,
+   "error": 0.11
+  }
+ },
+ "difference_to_reference": {
+  "atlas_4l_36fb": 0.2703588604990017,
+  "pdg_2026": -0.06964113950098749
+ }
+}

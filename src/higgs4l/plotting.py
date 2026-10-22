@@ -81,3 +81,23 @@ def likelihood_scan(ax, grid, m2dnll, label):
     ax.set_ylabel(r"$-2\,\Delta\ln L$")
     ax.set_ylim(0, 6)
     ax.legend(loc="upper right", fontsize="small")
+
+
+def mass_fit_overlay(ax, m, model, fit: dict, edges, lumi_fb: float):
+    """Data histogram with the fitted signal + background density and the background."""
+    centres = (edges[:-1] + edges[1:]) / 2
+    width = edges[1] - edges[0]
+    n, _ = np.histogram(m, edges)
+    x = np.linspace(edges[0], edges[-1], 600)
+    background = fit["n_b"] * model.background_pdf(x) * width
+    signal = fit["n_s"] * model.signal_pdf(x, fit["m_h"]) * width
+    ax.errorbar(centres, n, yerr=np.sqrt(n), fmt="ko", markersize=4, label="Data")
+    ax.plot(x, signal + background, "r-", label="Fit, signal + background")
+    ax.plot(x, background, "b--", label="Fit, background")
+    ax.set_xlim(edges[0], edges[-1])
+    ax.set_ylim(0, 1.8 * n.max())
+    ax.set_xlabel(r"$m_{4\ell}$ [GeV]")
+    ax.set_ylabel(f"Events / {width:g} GeV")
+    hep.atlas.label(ax=ax, text="Open Data", data=True, lumi=lumi_fb, com=13)
+    ax.text(0.05, 0.80, rf"$m_H$ = {fit['m_h']:.2f} GeV", transform=ax.transAxes)
+    ax.legend(loc="upper right", fontsize="small")
