@@ -1,0 +1,14 @@
+atlasopenmagic
+uproot
+awkward
+vector
+numpy
+scipy
+iminuit
+pyhf
+scikit-learn
+matplotlib
+mplhep
+pyyaml
+pytest
+black
