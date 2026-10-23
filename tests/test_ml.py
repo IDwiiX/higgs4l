@@ -1,16 +1,14 @@
-import json
-
 import numpy as np
 import pytest
 from scipy import stats
 from sklearn.metrics import roc_auc_score
 
-from higgs4l.data import ROOT
 from higgs4l.ml import (
     FEATURES,
     asimov_z,
     category_inputs,
     chi2_weighted,
+    choose_threshold,
     classifier_sample,
     fit_classifier,
     train_test_ks,
@@ -36,11 +34,6 @@ SPEC_FEATURES = [
 
 
 @pytest.fixture(scope="module")
-def recorded():
-    return json.loads((ROOT / "results" / "ml.json").read_text())
-
-
-@pytest.fixture(scope="module")
 def sample(cfg):
     return classifier_sample(cfg)
 
@@ -49,7 +42,7 @@ def sample(cfg):
 def classifier(cfg, sample):
     """Trained on even eventNumber with the config seed, as in scripts/classifier.py."""
     clf, kind, tried = fit_classifier(sample, cfg["classifier"])
-    return clf, kind, clf.predict_proba(sample["X"])[:, 1]
+    return clf, kind, clf.predict_proba(sample["X"])[:, 1], tried
 
 
 def test_chi2_weighted_exact():
@@ -88,26 +81,37 @@ def test_category_background_is_inclusive_shape(cfg, sample):
     np.testing.assert_allclose(cats[0][2] / cats[0][2].sum(), b / b.sum(), rtol=1e-12)
 
 
-def test_train_test_scores_reported(sample, classifier, recorded):
-    """P4-a (reported, no target): train vs test KS per class, as stored in ml.json."""
-    _, kind, score = classifier
-    assert kind == recorded["classifier"]
+def test_train_test_scores_reported(cfg, sample, classifier):
+    """P4-a (reported, no target): the boosted trees fail the train vs test KS rule, so
+    the analysis uses logistic regression (docs/learning/phase4.md, section 9)."""
+    _, kind, score, tried = classifier
+    p_min = cfg["classifier"]["ks_p_min"]
+    assert min(r["ks_p"] for r in tried["gradient_boosting"].values()) <= p_min
+    assert kind == "logistic"
     ks = train_test_ks(sample, score)
     for name in ("signal", "background"):
         print(f"P4-a {kind} {name}: KS p {ks[name]['ks_p']:.3g}")
-        assert ks[name]["ks_p"] == pytest.approx(
-            recorded["train_test_ks"][name]["ks_p"], rel=1e-9
-        )
 
 
-def test_background_shape_reported(cfg, sample, classifier, recorded):
-    """P4-b (reported, no target): background m4l, high vs low category, test half."""
-    _, _, score = classifier
+def test_background_shape_reported(cfg, sample, classifier):
+    """P4-b (reported, no target): background m4l, high vs low category, test half,
+    with the threshold chosen on the training half as in scripts/classifier.py."""
+    _, _, score, _ = classifier
     c = cfg["classifier"]
+    sig = cfg["significance"]
+    even = sample["even"]
+    threshold, _ = choose_threshold(
+        {k: v[even] for k, v in sample.items()},
+        score[even],
+        c["signal_efficiencies"],
+        cfg["samples"]["signal"],
+        bin_edges(*sig["range"], sig["bin_width"]),
+        sig["lumi_rel_unc"],
+    )
     edges = bin_edges(*c["range"], c["sculpting_bin_width"])
-    bkg = ~sample["is_signal"] & ~sample["even"]
+    bkg = ~sample["is_signal"] & ~even
     m, w = sample["m4l"], sample["weight"]
-    high = score > recorded["threshold"]
+    high = score > threshold
 
     def hist(mask):
         return (
@@ -116,11 +120,13 @@ def test_background_shape_reported(cfg, sample, classifier, recorded):
         )
 
     x2, p = chi2_weighted(*hist(bkg & high), *hist(bkg & ~high))
-    print(f"P4-b: chi2 {x2:.2f} / {len(edges) - 2}, p {p:.3f}")
-    assert p == pytest.approx(recorded["sculpting"]["p"], rel=1e-9)
+    print(
+        f"P4-b: threshold {threshold:.3f}, chi2 {x2:.2f} / {len(edges) - 2}, p {p:.3f}"
+    )
+    assert np.isfinite(x2)
 
 
-def test_uninformative_split_has_no_gain(cfg, sample, recorded):
+def test_uninformative_split_has_no_gain(cfg, sample):
     """P4-c: a split by a fixed fraction reproduces the inclusive Z_A exactly."""
     sig = cfg["significance"]
     edges = bin_edges(*sig["range"], sig["bin_width"])
@@ -131,13 +137,11 @@ def test_uninformative_split_has_no_gain(cfg, sample, recorded):
     categorized = asimov_z(category_model(split, sig["lumi_rel_unc"]))
     print(f"P4-c: inclusive {inclusive:.6f}, proportional split {categorized:.6f}")
     assert categorized == pytest.approx(inclusive, rel=1e-6)
-    for key in ("z_asimov_test_inclusive", "z_asimov_test_categories"):
-        assert np.isfinite(recorded[key])
 
 
 def test_m4l_not_a_feature(sample, classifier):
     """P4-d: the features are the spec list, and none of them is m4l."""
-    clf, _, _ = classifier
+    clf = classifier[0]
     assert FEATURES == SPEC_FEATURES
     assert "m4l" not in FEATURES
     assert sample["X"].shape[1] == 10

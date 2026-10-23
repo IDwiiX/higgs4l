@@ -46,7 +46,9 @@ def test_p1e_invariant_mass():
 
 @pytest.mark.phase4
 def test_rapidity():
-    assert rapidity(np.array([10.0, 3.0, 1.0, 6.0])) == pytest.approx(np.log(2), rel=1e-12)
+    assert rapidity(np.array([10.0, 3.0, 1.0, 6.0])) == pytest.approx(
+        np.log(2), rel=1e-12
+    )
 
 
 @pytest.mark.phase4

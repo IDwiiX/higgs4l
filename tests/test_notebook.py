@@ -1,15 +1,13 @@
-import json
-
 import numpy as np
 import pytest
 
 from higgs4l.data import (
-    ROOT,
     STORED_DTYPES,
     fetch,
     file_urls,
     load_selected,
     read_events,
+    selected_path,
 )
 from higgs4l.selection import preselection
 from higgs4l.stats import notebook_metric
@@ -45,13 +43,12 @@ def test_p1d_window_signal(notebook_window):
     assert signal == pytest.approx(total - background, rel=1e-9)
 
 
-def test_provenance_lists_all_files(cfg):
-    provenance = json.loads((ROOT / "results" / "provenance.json").read_text())
-    assert provenance["release"] == cfg["release"]
-    assert provenance["versions"]["atlasopenmagic"]
-    dids = {r["did"] for r in provenance["files"]}
-    assert dids == {d for ids in cfg["samples"].values() for d in ids}
-    assert len(provenance["files"]) == 40
+def test_selected_has_every_sample(cfg):
+    """data/selected holds one file per configured sample: data and 24 simulated."""
+    dids = [d for ids in cfg["samples"].values() for d in ids]
+    assert len(dids) == 25
+    for did in dids:
+        assert selected_path(did).is_file(), did
 
 
 @pytest.mark.network
