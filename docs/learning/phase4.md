@@ -273,3 +273,20 @@ From `scripts/classifier.py` → results/ml.json (odd half, signed weights, ×2 
   assumption of the category model is therefore only approximate. It puts too little
   background under the peak in the high category, which if anything makes the category
   result optimistic.
+
+## 11. Result on data (unblind step)
+
+The frozen classifier and threshold were applied once to the 124 data events in 110-160 GeV
+(`scripts/classifier_data.py` → results/ml_data.json). The templates are the odd simulation
+half ×2, the same as for the expected numbers.
+
+- **Two categories: observed Z = 3.29** (asymptotic, p0 = 5.0e-4), expected 5.97.
+  μ̂ = 0.62 +0.24 −0.22. The data split into 20 high-score and 104 low-score events. The
+  simulation predicts 15.8 and 71.3.
+- **Inclusive with the same templates: Z = 3.90**, μ̂ = 0.73 +0.22 −0.20. Phase 3, with the
+  full-sample templates, gave 3.96.
+- The categories lose about 0.6σ on data against 0.09σ expected. This is not a tested claim,
+  but it is consistent with section 10: the high category's background has its own free
+  normalization fixed by very few events, and the model's inclusive background shape puts
+  too little background at low m4l in that category. Three of the 20 high-score data events
+  are in the first bin, 110-112.5 GeV. The inclusive phase 3 fit stays the headline result.

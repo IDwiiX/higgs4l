@@ -1,0 +1,79 @@
+{
+ "threshold": 0.7496117125156219,
+ "classifier": "logistic",
+ "inclusive": {
+  "q0": 15.24725670413784,
+  "z": 3.904773579112858,
+  "p0": 4.715682264431454e-05,
+  "mu_hat": 0.7298222954938687,
+  "mu_error_down": 0.20141591811850745,
+  "mu_error_up": 0.22261558867605513,
+  "fitted_background": 95.02119067873798,
+  "fitted_signal": 28.978519017172943,
+  "mu_b_hat": 2.1991019440329564,
+  "z_asimov_at_fitted_background": 4.696205211143619,
+  "z_expected": 6.061103629295003
+ },
+ "categories": {
+  "q0": 10.833298828300912,
+  "z": 3.291397701327038,
+  "p0": 0.0004984543369661605,
+  "mu_hat": 0.6225781039607385,
+  "mu_error_down": 0.21774653573736458,
+  "mu_error_up": 0.23798812668864966,
+  "fitted_background": 99.8471217694321,
+  "fitted_signal": 24.152943056505837,
+  "z_expected": 5.970873969461508
+ },
+ "data_events": {
+  "high": 20,
+  "low": 104
+ },
+ "data_counts": {
+  "high": [
+   3,
+   0,
+   0,
+   2,
+   3,
+   4,
+   4,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   0,
+   0,
+   1
+  ],
+  "low": [
+   3,
+   3,
+   3,
+   2,
+   7,
+   9,
+   9,
+   5,
+   9,
+   6,
+   4,
+   7,
+   2,
+   3,
+   6,
+   7,
+   5,
+   5,
+   3,
+   6
+  ]
+ },
+ "note": "templates from the odd simulation half x2, as in results/ml.json; the phase 3 observed Z with full-sample templates is in results/significance.json"
+}

@@ -8,7 +8,7 @@ and a classifier whose gain in expected significance is measured on events it ne
 
 Status: phases 1 (selection, notebook reproduction), 2 (mass fit) and 3 (profile-likelihood
 significance) are done, each validated on simulation and then applied to data. Phase 4
-(classifier) is done on simulation; its fit to data is next.
+(classifier) is done on simulation and on data; the write-up is next.
 
 ## Results
 
@@ -51,6 +51,9 @@ All numbers are in the 122.5-130 GeV window used by the notebook, unless stated 
 | P4-a: train vs test score KS p, signal / background | 0.98 / 0.43 (boosted trees: background 8.6e-14, replaced) | unweighted KS, reported | same |
 | Expected Z, test half, inclusive / two categories | 6.06 / 5.97: no gain | pyhf, Asimov, odd-half templates ×2, free background per category | same |
 | P4-b: background m4l, high vs low score | χ² 4.3/4, p = 0.37; mean m4l 129.4 vs 138.5 GeV | weighted χ², 10 GeV bins, reported | same |
+| **Observed Z, data, two categories** | **3.29** (p0 = 5.0e-4; expected 5.97) | frozen classifier and threshold, odd-half templates ×2, 20 + 104 events | `classifier_data.py` → `results/ml_data.json` |
+| μ̂, data, two categories | 0.62 +0.24 −0.22 | profile scan | same |
+| Observed Z, data, inclusive with the same templates | 3.90 (phase 3, full-sample templates: 3.96) | odd-half templates ×2 | same |
 
 The notebook's numbers are reproduced to machine precision. Its stored outputs come from 7 of
 the 8 signal samples now in the notebook (346310 was added later without rerunning). With all
@@ -147,6 +150,10 @@ asymptotic.
   in m4l (score-m4l correlation −0.38), although the χ² shape test does not detect it
   (p = 0.37, with few events). The category model assumes the inclusive background shape in
   both categories, so this is a stated approximation.
+- **On data the categories do worse, as expected from simulation.** The observed Z is 3.29
+  with two categories, against 3.90 for the inclusive fit with the same odd-half templates
+  (3.96 in phase 3 with the full simulation), and μ̂ = 0.62 +0.24 −0.22. The inclusive phase 3
+  result stays the headline significance.
 - The derivations, every change made after the first model failed, and the reasons are in
   `docs/learning/phase4.md`.
 
@@ -198,6 +205,7 @@ python3 -m venv .venv
 .venv/bin/python scripts/significance.py       # simulation and Asimov only; 2000 toys, about 17 minutes
 .venv/bin/python scripts/significance_data.py  # fit to data (unblinded), about 1 minute
 .venv/bin/python scripts/classifier.py         # simulation only, about 1 minute
+.venv/bin/python scripts/classifier_data.py    # fit to data (unblinded), about 3 minutes
 ```
 
 ## Credits
