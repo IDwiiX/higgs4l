@@ -64,7 +64,11 @@ problem the formula describes; the script checks that equivalence numerically.
 
 | ID | Check | Target |
 | --- | --- | --- |
-| P4-a | Train and test score distributions, signal and background separately | KS p-value > 0.05 |
-| P4-b | Background m4l shape in each category vs inclusive | chi2 compatible within MC statistics (p > 0.05) |
+| P4-a | Train and test score distributions, signal and background separately | KS p-value reported; no target |
+| P4-b | Background m4l shape in each category vs inclusive | chi2 p-value reported with the shape figure; no target |
 | P4-c | Expected significance with categories vs without, on the test half | reported with both numbers; no target |
 | P4-d | m4l is not among the features | exact |
+
+P4-a and P4-b were pass/fail checks (p > 0.05) until the first classifier, gradient-boosted
+trees, failed P4-a on simulation. They are now reported with their figures, as decided by the
+project owner; the reasons are in docs/learning/phase4.md, section 9.

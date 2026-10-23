@@ -4,12 +4,11 @@ A small, reproducible analysis of the Higgs boson in the H → ZZ* → 4ℓ chan
 ATLAS 2025 Open Data for education (13 TeV, 2015-2016, 36.6 fb⁻¹). It starts from the official
 ATLAS notebook, reproduces its numbers, and then goes further in three ways: a likelihood
 measurement of the Higgs mass with a calibrated uncertainty, a profile-likelihood significance,
-and a gradient-boosted classifier whose gain in expected significance is measured on events it
-never saw.
+and a classifier whose gain in expected significance is measured on events it never saw.
 
 Status: phases 1 (selection, notebook reproduction), 2 (mass fit) and 3 (profile-likelihood
-significance) are done, each validated on simulation and then applied to data; phase 4 (classifier)
-is next.
+significance) are done, each validated on simulation and then applied to data. Phase 4
+(classifier) is done on simulation; its fit to data is next.
 
 ## Results
 
@@ -48,6 +47,10 @@ All numbers are in the 122.5-130 GeV window used by the notebook, unless stated 
 | **μ̂, data** | **0.72 +0.22 −0.20** | profile scan | same |
 | Fitted background / simulated | 96.6 / 53.7 events (μ_b = 2.09) | same fit | same |
 | Expected Z at the fitted background (a posteriori) | 5.18 | Asimov at fitted nuisances, μ = 1 | same |
+| Classifier ROC AUC, test / train half | 0.702 / 0.763 | logistic regression, 10 features, m4l excluded; train even, test odd eventNumber | `classifier.py` → `results/ml.json` |
+| P4-a: train vs test score KS p, signal / background | 0.98 / 0.43 (boosted trees: background 8.6e-14, replaced) | unweighted KS, reported | same |
+| Expected Z, test half, inclusive / two categories | 6.06 / 5.97: no gain | pyhf, Asimov, odd-half templates ×2, free background per category | same |
+| P4-b: background m4l, high vs low score | χ² 4.3/4, p = 0.37; mean m4l 129.4 vs 138.5 GeV | weighted χ², 10 GeV bins, reported | same |
 
 The notebook's numbers are reproduced to machine precision. Its stored outputs come from 7 of
 the 8 signal samples now in the notebook (346310 was added later without rerunning). With all
@@ -131,6 +134,24 @@ asymptotic.
   significance, because shapesys is exactly the on/off likelihood behind that formula
   (`docs/learning/phase3.md`).
 
+## What phase 4 found
+
+- **A classifier on lepton kinematics does not improve the expected significance here.** On
+  the test half, two score categories give Z_A = 5.97 against 6.06 inclusive. The high
+  category is purer (S/B = 2.2 against 0.7), but it holds only about 5 background events with
+  its own free normalization, and the threshold was chosen on optimistic training scores.
+- **The simulated background is the limit.** 289 background events train the classifier. The
+  planned boosted trees overtrained on them (train vs test KS p ≈ 1e-10, and 8.6e-14 with
+  smaller trees), so the analysis uses logistic regression, which shows no overtraining.
+- **The score partly learns m4l even without it.** The high-score background sits 9 GeV lower
+  in m4l (score-m4l correlation −0.38), although the χ² shape test does not detect it
+  (p = 0.37, with few events). The category model assumes the inclusive background shape in
+  both categories, so this is a stated approximation.
+- The derivations, every change made after the first model failed, and the reasons are in
+  `docs/learning/phase4.md`.
+
+![Classifier score, train vs test](figures/classifier_scores.png)
+
 ## Limitations
 
 - **With signed weights the simulation is about 40% below data** where ZZ* dominates
@@ -176,6 +197,7 @@ python3 -m venv .venv
 .venv/bin/python scripts/mass_data.py          # fit to data (unblinded), about 1 minute
 .venv/bin/python scripts/significance.py       # simulation and Asimov only; 2000 toys, about 17 minutes
 .venv/bin/python scripts/significance_data.py  # fit to data (unblinded), about 1 minute
+.venv/bin/python scripts/classifier.py         # simulation only, about 1 minute
 ```
 
 ## Credits

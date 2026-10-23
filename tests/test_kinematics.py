@@ -1,9 +1,13 @@
 import numpy as np
 import pytest
 
-from higgs4l.kinematics import invariant_mass, lepton_p4
-
-pytestmark = pytest.mark.phase1
+from higgs4l.kinematics import (
+    cos_theta_star,
+    invariant_mass,
+    lepton_p4,
+    min_delta_r,
+    rapidity,
+)
 
 
 def boost(p4, beta, axis):
@@ -21,6 +25,7 @@ def to_collider(p4):
     return pt, np.arcsinh(p4[:, 3] / pt), np.arctan2(p4[:, 2], p4[:, 1]), p4[:, 0]
 
 
+@pytest.mark.phase1
 def test_p1e_invariant_mass():
     """P1-e: invariant mass of hand-built four-vectors, 1e-9 relative."""
     mz = 91.1876
@@ -37,3 +42,32 @@ def test_p1e_invariant_mass():
     lab = boost(boost(rest, 0.6, 3), 0.3, 1)
     p4 = lepton_p4(*to_collider(lab))
     assert invariant_mass(p4.sum(axis=0)) == pytest.approx(125.0, rel=1e-9)
+
+
+@pytest.mark.phase4
+def test_rapidity():
+    assert rapidity(np.array([10.0, 3.0, 1.0, 6.0])) == pytest.approx(np.log(2), rel=1e-12)
+
+
+@pytest.mark.phase4
+@pytest.mark.parametrize("cos", [1.0, 0.6, 0.0, -0.6])
+@pytest.mark.parametrize("axis", [1, 3])
+def test_cos_theta_star(cos, axis):
+    """Z1 at a known angle to z in the 4l rest frame; a boost along z or x keeps it.
+
+    Combined boosts along different axes are not tested: the pure boost back to the rest
+    frame then differs by a Wigner rotation, which changes the angle to the beam axis.
+    """
+    sin = np.sqrt(1 - cos**2)
+    z1 = np.array([[50.0, 30 * sin, 0.0, 30 * cos]])
+    z2 = np.array([[40.0, -30 * sin, 0.0, -30 * cos]])
+    lab1, lab2 = boost(z1, 0.6, axis), boost(z2, 0.6, axis)
+    assert cos_theta_star(lab1, lab1 + lab2)[0] == pytest.approx(cos, abs=1e-12)
+
+
+@pytest.mark.phase4
+def test_min_delta_r_wraps_phi():
+    eta = np.array([[0.0, 0.05, 2.0, -2.0]])
+    phi = np.array([[3.1, -3.1, 1.0, -1.0]])
+    expected = np.hypot(0.05, 2 * np.pi - 6.2)
+    assert min_delta_r(eta, phi)[0] == pytest.approx(expected, rel=1e-12)

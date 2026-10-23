@@ -91,19 +91,43 @@ def shape_model(
     mu_b, and the fixed-background model is a comparison with no background normalization
     uncertainty at all.
     """
-    stat = {"name": "mc_stat", "type": "staterror"}
+    inputs = (signal, signal_err, background, background_err)
+    mu_b = "mu_b" if free_background else None
+    return _template_model([_channel("m4l", inputs, mu_b)], lumi_rel_unc)
+
+
+def category_model(categories, lumi_rel_unc: float) -> pyhf.Model:
+    """One m4l channel per category, sharing mu and the luminosity factor.
+
+    categories is a list of shape_inputs tuples. Each category has its own free background
+    normalization and its own staterror factors (docs/learning/phase4.md, section 7).
+    """
+    channels = [
+        _channel(f"category_{i}", inputs, f"mu_b_{i}")
+        for i, inputs in enumerate(categories)
+    ]
+    return _template_model(channels, lumi_rel_unc)
+
+
+def _channel(name: str, inputs, mu_b: str | None) -> dict:
+    signal, signal_err, background, background_err = inputs
+    stat = {"name": f"mc_stat_{name}", "type": "staterror"}
     signal_mods = [
         MU,
         {"name": "lumi", "type": "lumi", "data": None},
         stat | {"data": list(signal_err)},
     ]
     background_mods = [stat | {"data": list(background_err)}]
-    if free_background:
-        background_mods.append({"name": "mu_b", "type": "normfactor", "data": None})
+    if mu_b is not None:
+        background_mods.append({"name": mu_b, "type": "normfactor", "data": None})
     samples = [
         {"name": "signal", "data": list(signal), "modifiers": signal_mods},
         {"name": "background", "data": list(background), "modifiers": background_mods},
     ]
+    return {"name": name, "samples": samples}
+
+
+def _template_model(channels: list, lumi_rel_unc: float) -> pyhf.Model:
     lumi = {
         "name": "lumi",
         "auxdata": [1.0],
@@ -111,7 +135,7 @@ def shape_model(
         "inits": [1.0],
         "bounds": [[1 - 10 * lumi_rel_unc, 1 + 10 * lumi_rel_unc]],
     }
-    spec = {"channels": [{"name": "m4l", "samples": samples}], "parameters": [lumi]}
+    spec = {"channels": channels, "parameters": [lumi]}
     return pyhf.Model(spec, poi_name="mu")
 
 

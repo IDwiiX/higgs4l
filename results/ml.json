@@ -1,0 +1,243 @@
+{
+ "config": {
+  "range": [
+   110,
+   160
+  ],
+  "seed": 20251023,
+  "gradient_boosting": {
+   "max_depth": 3,
+   "max_iter": 100,
+   "min_samples_leaf": 50,
+   "l2_regularization": 1.0,
+   "early_stopping": false
+  },
+  "logistic": {
+   "max_iter": 1000
+  },
+  "ks_p_min": 0.05,
+  "signal_efficiencies": [
+   0.3,
+   0.35,
+   0.4,
+   0.45,
+   0.5,
+   0.55,
+   0.6,
+   0.65,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95
+  ],
+  "sculpting_bin_width": 10
+ },
+ "features": [
+  "lep_pt_1",
+  "lep_pt_2",
+  "lep_pt_3",
+  "lep_pt_4",
+  "m12",
+  "m34",
+  "pt_4l",
+  "y_4l",
+  "cos_theta_star",
+  "min_delta_r"
+ ],
+ "classifier": "logistic",
+ "train_test_ks_by_model": {
+  "gradient_boosting": {
+   "signal": {
+    "ks_statistic": 0.0032610623051014254,
+    "ks_p": 0.3400875082099575,
+    "weighted_ks_statistic": 0.028388298379133925,
+    "weighted_ks_p_approx": 0.9052948598863342
+   },
+   "background": {
+    "ks_statistic": 0.32523462199098857,
+    "ks_p": 8.631926020365185e-14,
+    "weighted_ks_statistic": 0.6278336813718662,
+    "weighted_ks_p_approx": 1.966009684204052e-10
+   }
+  },
+  "logistic": {
+   "signal": {
+    "ks_statistic": 0.0015900783742633928,
+    "ks_p": 0.9845199211465021,
+    "weighted_ks_statistic": 0.047726219492284394,
+    "weighted_ks_p_approx": 0.32454721580889756
+   },
+   "background": {
+    "ks_statistic": 0.07200467999302984,
+    "ks_p": 0.4266463745846871,
+    "weighted_ks_statistic": 0.0897412097019481,
+    "weighted_ks_p_approx": 0.9726415059602717
+   }
+  }
+ },
+ "train_test_ks": {
+  "signal": {
+   "ks_statistic": 0.0015900783742633928,
+   "ks_p": 0.9845199211465021,
+   "weighted_ks_statistic": 0.047726219492284394,
+   "weighted_ks_p_approx": 0.32454721580889756
+  },
+  "background": {
+   "ks_statistic": 0.07200467999302984,
+   "ks_p": 0.4266463745846871,
+   "weighted_ks_statistic": 0.0897412097019481,
+   "weighted_ks_p_approx": 0.9726415059602717
+  }
+ },
+ "auc_test_signed": 0.7020953613324052,
+ "auc_train_signed": 0.7633417416027546,
+ "threshold": 0.7496117125156219,
+ "threshold_scan_train": [
+  {
+   "signal_efficiency": 0.3,
+   "threshold": 0.7496117125156219,
+   "z_asimov": 6.773340374845397
+  },
+  {
+   "signal_efficiency": 0.35,
+   "threshold": 0.7164005492861896,
+   "z_asimov": 6.516989355302809
+  },
+  {
+   "signal_efficiency": 0.4,
+   "threshold": 0.6829690713156588,
+   "z_asimov": 5.945358532144979
+  },
+  {
+   "signal_efficiency": 0.45,
+   "threshold": 0.649710949568773,
+   "z_asimov": 5.723817156205107
+  },
+  {
+   "signal_efficiency": 0.5,
+   "threshold": 0.6154385121656749,
+   "z_asimov": 5.664957556202593
+  },
+  {
+   "signal_efficiency": 0.55,
+   "threshold": 0.5805356095265699,
+   "z_asimov": 5.653787180316172
+  },
+  {
+   "signal_efficiency": 0.6,
+   "threshold": 0.5448224257372737,
+   "z_asimov": 5.685740414811247
+  },
+  {
+   "signal_efficiency": 0.65,
+   "threshold": 0.5092982576493768,
+   "z_asimov": 5.658927342894921
+  },
+  {
+   "signal_efficiency": 0.7,
+   "threshold": 0.47288172998515876,
+   "z_asimov": 5.642709172471441
+  },
+  {
+   "signal_efficiency": 0.75,
+   "threshold": 0.4356889671844162,
+   "z_asimov": 5.6476525309266785
+  },
+  {
+   "signal_efficiency": 0.8,
+   "threshold": 0.39691780234565793,
+   "z_asimov": 5.567584261763603
+  },
+  {
+   "signal_efficiency": 0.85,
+   "threshold": 0.3555762643274257,
+   "z_asimov": 5.567745245084311
+  },
+  {
+   "signal_efficiency": 0.9,
+   "threshold": 0.3103153957645652,
+   "z_asimov": 5.525609017310242
+  },
+  {
+   "signal_efficiency": 0.95,
+   "threshold": 0.25422105065936756,
+   "z_asimov": 5.898403291463911
+  }
+ ],
+ "z_asimov_test_inclusive": 6.061103629295003,
+ "z_asimov_test_categories": 5.970873969461508,
+ "z_gain": -0.09022965983349529,
+ "test_yields_x2": {
+  "high": {
+   "signal": 10.872798324630168,
+   "background": 4.920598197986609
+  },
+  "low": {
+   "signal": 29.71372225056759,
+   "background": 41.56415064201701
+  },
+  "inclusive": {
+   "signal": 40.58652057519798,
+   "background": 46.484748840003626
+  }
+ },
+ "sculpting": {
+  "edges": [
+   110,
+   120,
+   130,
+   140,
+   150,
+   160
+  ],
+  "events_high": 62,
+  "events_low": 216,
+  "chi2": 4.279391912100331,
+  "ndf": 4,
+  "p": 0.3695127658883997,
+  "mean_m4l_high": 129.43615081112384,
+  "mean_m4l_low": 138.51208668978134,
+  "score_m4l_correlation_abs_weights": -0.3790442456360366,
+  "high": [
+   [
+    0.9298300014922998,
+    0.6094017381484902,
+    0.16520757537681918,
+    0.3689568012404463,
+    0.3869029827352479
+   ],
+   [
+    0.3475771595151851,
+    0.2045406988720626,
+    0.00649583787282948,
+    0.019526791605549265,
+    0.15135791360196982
+   ]
+  ],
+  "low": [
+   [
+    3.340121780913342,
+    3.300940400792567,
+    2.628817843953618,
+    5.750405058386843,
+    5.761790236962133
+   ],
+   [
+    1.1695473027227177,
+    1.2521156542851646,
+    1.3787994013416554,
+    2.089366515408066,
+    2.6603867548449793
+   ]
+  ]
+ },
+ "largest_background_weight": {
+  "did": 700323,
+  "weight": 5.837314506197812,
+  "half": "train",
+  "score": 0.30099589525328435
+ },
+ "note": "simulation only; test-half yields and errors scaled by 2; inclusive and category Z both from the test half; category background = inclusive shape times the category's background fraction"
+}

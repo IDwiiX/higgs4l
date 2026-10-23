@@ -52,3 +52,24 @@ significance:
   n_toys: 1000
   p3h_toys: 10000000
   seed: 20251023
+
+# Phase 4 classifier: trained on even eventNumber, evaluated on odd, simulation only.
+# Revised once on simulation, after the first model overtrained (docs/learning/phase4.md,
+# section 9). No data were used for any of these choices.
+classifier:
+  range: [110, 160]
+  seed: 20251023
+  # The first model; if its train and test scores disagree (KS p < 0.05 for signal or
+  # background), the analysis uses logistic regression on the same features.
+  gradient_boosting:
+    max_depth: 3
+    max_iter: 100
+    min_samples_leaf: 50
+    l2_regularization: 1.0
+    early_stopping: false
+  logistic:
+    max_iter: 1000
+  ks_p_min: 0.05
+  signal_efficiencies: [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80,
+                        0.85, 0.90, 0.95]
+  sculpting_bin_width: 10
