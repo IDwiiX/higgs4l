@@ -7,8 +7,9 @@ measurement of the Higgs mass with a calibrated uncertainty, a profile-likelihoo
 and a gradient-boosted classifier whose gain in expected significance is measured on events it
 never saw.
 
-Status: phases 1 (selection, notebook reproduction) and 2 (mass fit, validated on simulation,
-then applied to data) are done; phase 3 (profile-likelihood significance) is next.
+Status: phases 1 (selection, notebook reproduction), 2 (mass fit) and 3 (profile-likelihood
+significance) are done, each validated on simulation and then applied to data; phase 4 (classifier)
+is next.
 
 ## Results
 
@@ -38,6 +39,15 @@ All numbers are in the 122.5-130 GeV window used by the notebook, unless stated 
 | Shift with a Gaussian signal shape / all-background shape, data | +0.91 / +0.41 GeV | same data | same |
 | P2-d: ATLAS, 36.1 fb⁻¹, 4ℓ | 124.79 ± 0.37 GeV; ours differs by +0.27 GeV | Phys. Lett. B 784 (2018) 345 | same |
 | P2-e: PDG average | 125.13 ± 0.11 GeV; ours differs by −0.07 GeV | PDG Live S126M, 2026 | same |
+| P3-a to P3-g: single-bin pyhf Z_A vs closed form | agree to 1e-5 relative | pyhf q0 on Asimov data, shapesys for background uncertainty | `tests/test_significance.py` |
+| P3-h: toys vs asymptotics, s = 10, b = 5 | toy p0 2.31e-4 (exact Poisson 2.26e-4) vs asymptotic 1.59e-4: Z 3.50 vs 3.60 | 10⁷ counting toys | `significance.py` → `results/significance_expected.json` |
+| Expected Z, shape fit 110-160 GeV, background normalization free | 6.64 (8.74 with background fixed to simulation) | pyhf, Asimov, lumi 0.87%, MC stat per bin | same |
+| Expected Z from 1000 s+b toys | 6.50 ± 0.04 (Asimov 6.64 is 3.4σ high) | same model | same |
+| Expected μ uncertainty | +0.21 −0.19 | profile scan on Asimov data | same |
+| **Observed Z, data** | **3.96** (asymptotic, p0 = 3.8e-5) | frozen model, 124 events in 110-160 GeV | `significance_data.py` → `results/significance.json` |
+| **μ̂, data** | **0.72 +0.22 −0.20** | profile scan | same |
+| Fitted background / simulated | 96.6 / 53.7 events (μ_b = 2.09) | same fit | same |
+| Expected Z at the fitted background (a posteriori) | 5.18 | Asimov at fitted nuisances, μ = 1 | same |
 
 The notebook's numbers are reproduced to machine precision. Its stored outputs come from 7 of
 the 8 signal samples now in the notebook (346310 was added later without rerunning). With all
@@ -85,6 +95,42 @@ finding are in `docs/learning/phase1.md`.
   The all-background shape moves m̂_H by +0.41 GeV. Both are cross-checks of the frozen
   model; neither is included as a systematic uncertainty.
 
+## What phase 3 found
+
+Comparison of significance methods (`results/significance_table.md`):
+
+| Method | Notebook selection | Corrected, expected | Corrected, observed |
+| --- | --- | --- | --- |
+| Notebook metric (S+B)/√(B+0.3B²), window | 4.43 | 7.96 | - |
+| S/√B, window | 5.74 | 11.19 | - |
+| Counting Asimov, known B, window | 4.70 | 7.82 | - |
+| Counting Asimov, 30% B uncertainty, window | 3.08 | 5.38 | - |
+| Shape fit 110-160 GeV, B fixed to simulation | - | 8.74 | (8.63, not valid) |
+| **Shape fit 110-160 GeV, B normalization free** | - | 6.64 | **3.96** |
+| Same, median of 1000 s+b toys | - | 6.50 ± 0.04 | - |
+| Shape fit, 5 GeV bins, B free (cross-check) | - | 6.37 | 4.18 |
+
+The two columns differ in more than the selection: 7 against 8 signal samples, abs against
+signed weights, and pT cuts on stored against sorted leptons. Shape-fit values are
+asymptotic.
+
+- **Observed significance 3.96σ, expected 6.64σ; μ̂ = 0.72 +0.22 −0.20.** The gap has two
+  parts. The background fitted in data is 1.8 times the simulation, which alone lowers the
+  expectation to 5.18. The signal strength is then 1.3σ below 1. Both agree with the
+  phase 2 mass fit (N_s = 24.9 against 39.1, N_b about twice the simulation).
+- **The background normalization floats freely.** That choice was fixed before unblinding,
+  because the simulation is 40% low at 180-250 GeV. It costs 2.1σ of expected significance
+  (8.74 against 6.64). The fixed-background observed 8.63 is shown only for completeness: the
+  data reject that background level.
+- **The usual counting formulas overstate.** In the notebook window, S/√B gives 11.2 for the
+  corrected selection, against 7.82 for the Asimov formula. The full shape fit with an honest
+  background treatment expects 6.64.
+- **Asymptotics are slightly optimistic here.** The s+b toy median is 2% below Z_A (3.4σ with
+  1000 toys). For s = 10, b = 5 the exact p-value is 1.4 times the asymptotic one (P3-h).
+- **Single-bin checks.** pyhf with a shapesys background reproduces the closed-form Asimov
+  significance, because shapesys is exactly the on/off likelihood behind that formula
+  (`docs/learning/phase3.md`).
+
 ## Limitations
 
 - **With signed weights the simulation is about 40% below data** where ZZ* dominates
@@ -98,6 +144,13 @@ finding are in `docs/learning/phase1.md`.
   simulated yields; the data excess at 130-140 GeV doubles the fitted background and the
   error becomes 0.93 GeV. A quarter of the simulated background in 110-140 GeV (6.6 of 27.6 events)
   comes from three Z+jets events, one with weight 5.8 (`results/mass_model.json`).
+- **Sparse background simulation in the significance fit.** The relative MC error per 2.5 GeV
+  background bin is 29-127%. One Z+jets event with weight 5.8 is 11% of the background in
+  110-160 GeV, and 53 events have negative weights. The Gaussian staterror constraint is
+  crude at these widths.
+- **Few systematic uncertainties in the significance.** Only the luminosity (0.87%), a free
+  background normalization and MC statistics are included. There are no theory, lepton or
+  background-shape uncertainties.
 - **No systematic uncertainty on m_H.** The lepton energy and momentum scales are not
   varied. The calibration δ has an MC-statistical error of 0.01 GeV, which is negligible.
 - **The calibration comes from one simulated mass point.** δ is measured at 125.0 GeV and
@@ -121,6 +174,8 @@ python3 -m venv .venv
 .venv/bin/python scripts/mass_toys.py          # 2000 toys, about 2 minutes
 .venv/bin/python scripts/mass_simulation.py    # needs the two outputs above
 .venv/bin/python scripts/mass_data.py          # fit to data (unblinded), about 1 minute
+.venv/bin/python scripts/significance.py       # simulation and Asimov only; 2000 toys, about 17 minutes
+.venv/bin/python scripts/significance_data.py  # fit to data (unblinded), about 1 minute
 ```
 
 ## Credits
@@ -131,3 +186,4 @@ python3 -m venv .venv
 - The official notebook `HZZAnalysis.ipynb` from
   [atlas-outreach-data-tools/notebooks-collection-opendata](https://github.com/atlas-outreach-data-tools/notebooks-collection-opendata/tree/master/13-TeV-examples/uproot_python).
 - Asimov significance: G. Cowan, K. Cranmer, E. Gross, O. Vitells, Eur. Phys. J. C 71 (2011) 1554.
+- Luminosity uncertainty: ATLAS Collaboration, Eur. Phys. J. C 83 (2023) 982, arXiv:2212.09379.

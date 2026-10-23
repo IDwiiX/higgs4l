@@ -40,3 +40,15 @@ mass_fit:
   background_shape_dids: [700600]  # ZZ*
   n_toys: 2000
   seed: 20251023
+
+# Phase 3 significance: pyhf template fit of m4l, paired selection, signed weights.
+# Luminosity uncertainty 0.87%: 2015 (3.24 +- 0.04 fb^-1) and 2016 (33.40 +- 0.30 fb^-1)
+# combined with their correlation 0.579, ATLAS, Eur. Phys. J. C 83 (2023) 982, Table 8.
+significance:
+  range: [110, 160]
+  bin_width: 2.5
+  cross_check_bin_width: 5.0
+  lumi_rel_unc: 0.0087
+  n_toys: 1000
+  p3h_toys: 10000000
+  seed: 20251023
