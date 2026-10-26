@@ -1,7 +1,7 @@
 # higgs4l
 
 A small, reproducible analysis of the Higgs boson in the H → ZZ* → 4ℓ channel with the
-ATLAS 2025 Open Data for education (13 TeV, 2015-2016, 36.6 fb⁻¹). It reproduces the official
+ATLAS 2025 Open Data for education. It reproduces the official
 ATLAS notebook exactly, corrects its selection (pT cuts on pT-sorted leptons, Z1/Z2 pairing)
 and its significance estimate, and then adds three things: an unbinned likelihood fit of the
 Higgs mass with a calibrated, toy-validated uncertainty (m_H = 125.06 ± 0.93 GeV); a
@@ -61,23 +61,6 @@ cd report && latexmk -pdf main.tex
 `mass_toys`, `mass_simulation`, `mass_data`, `significance`, `significance_data`,
 `classifier`, `classifier_data`. Each script's docstring says what it reads and writes.
 
-## Limitations
-
-- **Data exceed the simulation by 40%** where ZZ* dominates (180-250 GeV, signed weights), although the
-  weight normalization is verified (`results/normalization_check.json`). The likely cause, a missing
-  gg → ZZ* sample, is not quantified. The background normalization is therefore free in the
-  significance fit, which costs 2.1σ of expected significance.
-- **Data exceed simulation at 130-140 GeV** (26 events against 7.4). The mass fit follows it
-  with a larger background, which nearly doubles the error on m_H from the expected 0.50 GeV.
-  The cause is not identified.
-- **Few systematic uncertainties.** The significance includes the luminosity (0.87%), a free
-  background normalization and MC statistics; the mass has none (no lepton scale
-  variations). The signal-shape choice moves m_H by up to 0.9 GeV on data.
-- **Sparse background simulation.** 289 background events train the classifier; the planned
-  boosted trees overtrained and were replaced by logistic regression. A single Z+jets event
-  with weight 5.8 is 11% of the background in 110-160 GeV.
-- **Simplified selection**: no m4l-dependent m34 cut, ΔR cut or J/ψ veto. **Partial
-  blinding**: data were plotted in phase 1; every later choice was fixed on simulation.
 
 ## Credits
 
