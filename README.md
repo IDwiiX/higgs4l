@@ -7,8 +7,7 @@ and its significance estimate, and then adds three things: an unbinned likelihoo
 Higgs mass with a calibrated, toy-validated uncertainty (m_H = 125.06 ± 0.93 GeV); a
 profile-likelihood significance with pyhf (3.96σ observed, 6.64σ expected); and a classifier
 on lepton kinematics whose expected gain, measured on events it never saw, turns out to be
-zero. Every choice was fixed on simulation before the data were fitted. The write-up is
-`report/main.pdf`; the derivations are in `docs/learning/`.
+zero. 
 
 ## Results
 
