@@ -8,7 +8,7 @@ import json
 
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected, read_result
+from higgs4l.data import load_config, load_selected, read_result, write_result
 from higgs4l.ml import (
     HALF_SAMPLE_SCALE,
     category_inputs,
@@ -71,7 +71,7 @@ def main():
         "templates from the odd simulation half x2, as in results/ml.json; the phase 3 "
         "observed Z with full-sample templates is in results/significance.json"
     )
-    (ROOT / "results" / "ml_data.json").write_text(json.dumps(results, indent=1) + "\n")
+    write_result("ml_data", results)
     print(json.dumps(results, indent=1))
 
 

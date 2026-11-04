@@ -8,7 +8,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, read_result
+from higgs4l.data import ROOT, load_config, read_result, write_result
 from higgs4l.massfit import converged, load_model, minos_error, pulls, run_toys
 from higgs4l.plotting import pull_histogram
 
@@ -46,9 +46,7 @@ def main():
     )
     summary, pull = toy_summary(results, fit_cfg["m_true"])
     summary |= {"expected_yields": yields, "seed": fit_cfg["seed"]}
-    (ROOT / "results" / "mass_toys.json").write_text(
-        json.dumps(summary, indent=1) + "\n"
-    )
+    write_result("mass_toys", summary)
 
     fig, ax = plt.subplots(figsize=(8, 6))
     pull_histogram(ax, pull, summary["pull_mean"], summary["pull_width"])

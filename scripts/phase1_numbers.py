@@ -3,11 +3,9 @@
 Reads data/selected and writes results/phase1.json.
 """
 
-import json
-
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import load_config, load_selected, write_result
 from higgs4l.selection import in_range, select
 from higgs4l.stats import (
     bin_edges,
@@ -118,8 +116,7 @@ def main():
         "selection_comparison": comparison,
         "paired_signal_share_in_window": signal_share,
     }
-    out = ROOT / "results" / "phase1.json"
-    out.write_text(json.dumps(results, indent=1) + "\n")
+    write_result("phase1", results)
     for stage, c in comparison.items():
         r, z = c["yields"], c["counting_window"]
         print(

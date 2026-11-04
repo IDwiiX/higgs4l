@@ -68,6 +68,12 @@ def read_result(name: str) -> dict:
     return json.loads((ROOT / "results" / f"{name}.json").read_text())
 
 
+def write_result(name: str, result: dict) -> None:
+    """Write results/<name>.json; numpy scalars are stored as floats."""
+    text = json.dumps(result, indent=1, default=float) + "\n"
+    (ROOT / "results" / f"{name}.json").write_text(text)
+
+
 def background_dids(cfg: dict) -> list[int]:
     """Dataset IDs of the simulated backgrounds."""
     return cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]

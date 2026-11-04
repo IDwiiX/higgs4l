@@ -9,7 +9,13 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, read_result, simulation_dids
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    read_result,
+    simulation_dids,
+    write_result,
+)
 from higgs4l.massfit import fit_mass, load_model, scan_mass, simulation
 from higgs4l.plotting import likelihood_scan
 
@@ -71,9 +77,7 @@ def main():
         "shift_all_background_shape": fits["all_background_shape"]["m_h"]
         - fits["nominal"]["m_h"],
     }
-    (ROOT / "results" / "mass_simulation.json").write_text(
-        json.dumps(result, indent=1, default=float) + "\n"
-    )
+    write_result("mass_simulation", result)
 
     grid = np.linspace(123.0, 127.0, 81)
     fig, ax = plt.subplots(figsize=(8, 6))

@@ -8,7 +8,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, load_config, write_result
 from higgs4l.massfit import bernstein2, dscb, exponential, freeze_model, simulation
 from higgs4l.plotting import shape_fit
 
@@ -18,9 +18,7 @@ def main():
     fit_cfg = cfg["mass_fit"]
     lo, hi = fit_cfg["range"]
     model = freeze_model(cfg)
-    (ROOT / "results" / "mass_model.json").write_text(
-        json.dumps(model, indent=1) + "\n"
-    )
+    write_result("mass_model", model)
 
     signal = simulation(cfg, fit_cfg["signal_shape_dids"])
     even = signal["eventNumber"] % 2 == 0

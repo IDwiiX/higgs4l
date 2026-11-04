@@ -17,6 +17,7 @@ from higgs4l.data import (
     load_selected,
     read_result,
     simulation_dids,
+    write_result,
 )
 from higgs4l.massfit import (
     converged,
@@ -166,9 +167,7 @@ def main():
             name: best["m_h"] - ref["m_h"] for name, ref in REFERENCES.items()
         },
     }
-    (ROOT / "results" / "mass_fit.json").write_text(
-        json.dumps(result, indent=1, default=float) + "\n"
-    )
+    write_result("mass_fit", result)
 
     fig, ax = plt.subplots(figsize=(8, 6))
     mass_fit_overlay(ax, m, nominal, best, edges, cfg["lumi_fb"])

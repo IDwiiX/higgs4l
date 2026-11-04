@@ -11,7 +11,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected, read_result
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    read_result,
+    write_result,
+)
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, discovery_q0, mu_profile
@@ -136,9 +142,7 @@ def main():
             expected[label]["signal_yield"] + expected[label]["background_yield"]
         )
 
-    (ROOT / "results" / "significance.json").write_text(
-        json.dumps(results, indent=1) + "\n"
-    )
+    write_result("significance", results)
     (ROOT / "results" / "significance_table.md").write_text(
         table(phase1, expected, results)
     )

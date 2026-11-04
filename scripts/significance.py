@@ -10,7 +10,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected, simulation_dids
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    simulation_dids,
+    write_result,
+)
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import (
@@ -155,9 +161,7 @@ def main():
     )
     results["window_counting_paired"] = counting_rows(s, b)
 
-    (ROOT / "results" / "significance_expected.json").write_text(
-        json.dumps(results, indent=1) + "\n"
-    )
+    write_result("significance_expected", results)
 
     fig, ax = plt.subplots(figsize=(8, 6))
     likelihood_scan(ax, MU_GRID, scan, "Asimov, simulation", MU_LABEL)

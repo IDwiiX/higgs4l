@@ -9,7 +9,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, load_config, write_result
 from higgs4l.ml import (
     FEATURES,
     HALF_SAMPLE_SCALE,
@@ -212,7 +212,7 @@ def main():
         "category Z both from the test half; category background = inclusive shape times "
         "the category's background fraction",
     }
-    (ROOT / "results" / "ml.json").write_text(json.dumps(results, indent=1) + "\n")
+    write_result("ml", results)
 
     figures = ROOT / "figures"
     plot_roc(
