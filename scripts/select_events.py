@@ -62,6 +62,7 @@ def metadata_check(did, record):
 
 
 def cutflow_markdown(cutflow):
+    """The cutflow as one markdown table per selection."""
     lines = []
     for selection, groups in cutflow.items():
         lines += [
