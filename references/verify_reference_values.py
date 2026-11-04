@@ -22,7 +22,7 @@ def z_asimov_unc(s, b, sb):
 
 
 def pois_ll(n, mu):
-    # continuous in n so Asimov (non-integer) counts work
+    """Poisson log-likelihood, continuous in n so Asimov (non-integer) counts work."""
     return n * log(mu) - mu - special.gammaln(n + 1)
 
 
