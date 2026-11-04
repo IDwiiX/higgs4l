@@ -55,6 +55,7 @@ def model_variants(sig):
 
 
 def build_model(cfg, mc, width, free_background):
+    """The m4l template model at one bin width, with its input histograms."""
     sig = cfg["significance"]
     edges = bin_edges(*sig["range"], width)
     inputs = shape_inputs(mc, cfg["samples"]["signal"], edges)
@@ -83,6 +84,7 @@ def model_toys(model, n_toys, seed):
 
 
 def toy_summary(toys, z_a):
+    """Toy median against the Asimov Z, and b-only tails against asymptotics."""
     n = len(toys["b"])
     z_sb = np.sqrt(toys["sb"])
     tails = {}
@@ -109,6 +111,7 @@ def toy_summary(toys, z_a):
 
 
 def counting_rows(s, b):
+    """The window significances that enter the comparison table."""
     return {
         "S": s,
         "B": b,
