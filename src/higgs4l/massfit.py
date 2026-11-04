@@ -26,6 +26,8 @@ DSCB_LIMITS = {
     "alpha_r": (0.3, 5),
     "n_r": (1.01, 100),
 }
+GAUSS_START = {"mu": 124.6, "sigma": 2.0}
+GAUSS_LIMITS = {"sigma": (0.5, 5)}
 
 
 def dscb(m, mu, sigma, alpha_l, n_l, alpha_r, n_r):
@@ -279,7 +281,7 @@ def freeze_model(cfg: dict) -> dict:
     m_sig, w_sig = signal["m4l"][even], signal["weight"][even]
     dscb_fit = weighted_shape_fit(dscb, m_sig, w_sig, lo, hi, DSCB_START, DSCB_LIMITS)
     gauss_fit = weighted_shape_fit(
-        gauss, m_sig, w_sig, lo, hi, {"mu": 124.6, "sigma": 2.0}, {"sigma": (0.5, 5)}
+        gauss, m_sig, w_sig, lo, hi, GAUSS_START, GAUSS_LIMITS
     )
 
     def exp_pdf(m, slope):
