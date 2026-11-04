@@ -111,6 +111,7 @@ def main():
     frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
     toys = json.loads((ROOT / "results" / "mass_toys.json").read_text())
     m = in_range(select(load_selected(["data"]), cfg, "paired"), lo, hi)["m4l"]
+    edges = np.linspace(lo, hi, 13)  # 2.5 GeV bins
 
     nominal, gaussian = load_model(frozen), load_model(frozen, signal="gauss")
     fits = {
@@ -151,7 +152,7 @@ def main():
             "n_b": (best["n_b"] - expected["background"]) / best["n_b_error"],
         },
         "data_vs_simulation": data_vs_simulation(cfg, m, [lo, 120, 130, hi]),
-        "goodness_of_fit": goodness_of_fit(nominal, best, m, np.linspace(lo, hi, 13)),
+        "goodness_of_fit": goodness_of_fit(nominal, best, m, edges),
         "toys_at_fitted_yields": toys_at_fitted_yields(
             nominal, gaussian, best, error, N_TOYS_FITTED_YIELDS, fit_cfg["seed"]
         ),
@@ -169,7 +170,7 @@ def main():
     )
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    mass_fit_overlay(ax, m, nominal, best, np.linspace(lo, hi, 13), cfg["lumi_fb"])
+    mass_fit_overlay(ax, m, nominal, best, edges, cfg["lumi_fb"])
     fig.savefig(ROOT / "figures" / "mass_fit_data.png", dpi=150)
     plt.close(fig)
 
