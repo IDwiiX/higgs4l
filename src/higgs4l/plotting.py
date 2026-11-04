@@ -66,7 +66,7 @@ def pull_histogram(ax, pull, mean, width):
     """Toy pulls against the standard normal."""
     edges = np.linspace(-4, 4, 41)
     ax.hist(pull, edges, histtype="step", color="k", label="Toys")
-    x = np.linspace(-4, 4, 400)
+    x = np.linspace(edges[0], edges[-1], 400)
     scale = len(pull) * (edges[1] - edges[0]) / np.sqrt(2 * np.pi)
     ax.plot(x, scale * np.exp(-0.5 * x**2), "r-", label="N(0, 1)")
     ax.set_xlabel(r"Pull $(\hat{m}_H - m_H^{true}) / \sigma$")
