@@ -14,6 +14,7 @@ from higgs4l.ml import (
     weighted_ks,
     weighted_roc,
 )
+from higgs4l.selection import subset
 from higgs4l.stats import (
     asimov_z,
     bin_edges,
@@ -106,7 +107,7 @@ def test_background_shape_reported(cfg, sample, classifier):
     sig = cfg["significance"]
     even = sample["even"]
     threshold, _ = choose_threshold(
-        {k: v[even] for k, v in sample.items()},
+        subset(sample, even),
         score[even],
         c["signal_efficiencies"],
         cfg["samples"]["signal"],

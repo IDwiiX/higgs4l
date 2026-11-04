@@ -10,7 +10,7 @@ import numpy as np
 
 from higgs4l.data import ROOT, load_config, load_selected
 from higgs4l.ml import category_inputs, classifier_sample, features, fit_classifier
-from higgs4l.selection import in_range, select
+from higgs4l.selection import in_range, select, subset
 from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
 
 from significance_data import observed
@@ -28,7 +28,7 @@ def main():
     clf, kind, _ = fit_classifier(mc, c)
     assert kind == expected["classifier"]
     mc["score"] = clf.predict_proba(mc["X"])[:, 1]
-    test = {k: v[~mc["even"]] for k, v in mc.items()}
+    test = subset(mc, ~mc["even"])
     threshold = expected["threshold"]
 
     data = in_range(select(load_selected(["data"]), cfg, "paired"), *c["range"])

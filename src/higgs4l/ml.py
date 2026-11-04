@@ -15,7 +15,7 @@ from higgs4l.kinematics import (
     rapidity,
     transverse_momentum,
 )
-from higgs4l.selection import in_range, select, z_pairs
+from higgs4l.selection import in_range, select, subset, z_pairs
 from higgs4l.stats import asimov_z, category_model, shape_inputs
 
 FEATURES = [
@@ -170,8 +170,9 @@ def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> lis
     is_bkg = ~np.isin(events["did"], signal_dids)
     out = []
     for mask in (high, ~high):
-        part = {k: v[mask] for k, v in weighted.items()}
-        signal, signal_err, _, _ = shape_inputs(part, signal_dids, edges)
+        signal, signal_err, _, _ = shape_inputs(
+            subset(weighted, mask), signal_dids, edges
+        )
         f = events["weight"][mask & is_bkg].sum() / events["weight"][is_bkg].sum()
         out.append((signal, signal_err, f * background, np.sqrt(f) * background_err))
     return out

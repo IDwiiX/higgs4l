@@ -19,6 +19,7 @@ from higgs4l.ml import (
     fit_classifier,
     weighted_roc,
 )
+from higgs4l.selection import subset
 from higgs4l.stats import (
     asimov_z,
     bin_edges,
@@ -26,10 +27,6 @@ from higgs4l.stats import (
     shape_inputs,
     shape_model,
 )
-
-
-def half(events, mask):
-    return {k: v[mask] for k, v in events.items()}
 
 
 def sculpting(test, high, edges):
@@ -153,7 +150,7 @@ def main():
     mc = classifier_sample(cfg)
     clf, kind, tried = fit_classifier(mc, c)
     mc["score"] = clf.predict_proba(mc["X"])[:, 1]
-    train_half, test = half(mc, mc["even"]), half(mc, ~mc["even"])
+    train_half, test = subset(mc, mc["even"]), subset(mc, ~mc["even"])
 
     threshold, scan = choose_threshold(
         train_half,
