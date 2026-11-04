@@ -139,7 +139,9 @@ def test_uninformative_split_has_no_gain(cfg, sample):
     s, s_err, b, b_err = shape_inputs(sample, cfg["samples"]["signal"], edges)
     f = 0.3
     split = [(g * s, np.sqrt(g) * s_err, g * b, np.sqrt(g) * b_err) for g in (f, 1 - f)]
-    inclusive = asimov_z(shape_model(s, s_err, b, b_err, sig["lumi_rel_unc"], True))
+    inclusive = asimov_z(
+        shape_model(s, s_err, b, b_err, sig["lumi_rel_unc"], free_background=True)
+    )
     categorized = asimov_z(category_model(split, sig["lumi_rel_unc"]))
     print(f"P4-c: inclusive {inclusive:.6f}, proportional split {categorized:.6f}")
     assert categorized == pytest.approx(inclusive, rel=1e-6)

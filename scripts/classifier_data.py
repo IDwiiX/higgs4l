@@ -44,7 +44,9 @@ def main():
 
     scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive = shape_model(
-        *shape_inputs(scaled, signal_dids, edges), sig["lumi_rel_unc"], True
+        *shape_inputs(scaled, signal_dids, edges),
+        sig["lumi_rel_unc"],
+        free_background=True,
     )
     high = test["score"] > threshold
     categories = category_model(
