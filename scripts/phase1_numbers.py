@@ -26,6 +26,7 @@ GROUPS = ("signal", "zz", "other_bkg")
 
 
 def counting(s, b):
+    """Counting significances of a window with signal s and background b."""
     return {
         "S": s,
         "B": b,
