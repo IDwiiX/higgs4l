@@ -97,6 +97,9 @@ class MassModel:
     background: str  # "exponential" or "bernstein2"
     background_shape: dict
 
+    def __post_init__(self):
+        self._background_norm = integral(self._background, self.lo, self.hi)
+
     def signal_pdf(self, m, m_h):
         f = dscb if self.signal == "dscb" else gauss
 
@@ -104,9 +107,6 @@ class MassModel:
             return f(x, m_h + self.delta, **self.signal_shape)
 
         return shape(m) / integral(shape, self.lo, self.hi)
-
-    def __post_init__(self):
-        self._background_norm = integral(self._background, self.lo, self.hi)
 
     def _background(self, m):
         if self.background == "exponential":
