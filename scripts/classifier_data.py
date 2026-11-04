@@ -15,6 +15,7 @@ from higgs4l.ml import (
     classifier_sample,
     features,
     fit_classifier,
+    scale_weights,
 )
 from higgs4l.selection import in_range, select, subset
 from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
@@ -41,11 +42,7 @@ def main():
     data_high = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
     data_high = data_high > threshold
 
-    scaled = {
-        "m4l": test["m4l"],
-        "did": test["did"],
-        "weight": HALF_SAMPLE_SCALE * test["weight"],
-    }
+    scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive = shape_model(
         *shape_inputs(scaled, signal_dids, edges), sig["lumi_rel_unc"], True
     )

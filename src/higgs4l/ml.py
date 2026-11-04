@@ -159,6 +159,15 @@ def chi2_weighted(w1, s1, w2, s2) -> tuple[float, float]:
     return x2, float(stats.chi2.sf(x2, len(w1) - 1))
 
 
+def scale_weights(events: dict, scale: float) -> dict[str, np.ndarray]:
+    """The columns the templates need, with the weights times scale."""
+    return {
+        "m4l": events["m4l"],
+        "did": events["did"],
+        "weight": scale * events["weight"],
+    }
+
+
 def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> list:
     """Templates of the high- and low-score categories, weights times scale.
 
@@ -166,8 +175,7 @@ def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> lis
     times the category's background fraction f, with errors times sqrt(f): the simulated
     background is too sparse for per-category shapes (docs/learning/phase4.md, section 7).
     """
-    weighted = {"m4l": events["m4l"], "did": events["did"]}
-    weighted["weight"] = scale * events["weight"]
+    weighted = scale_weights(events, scale)
     _, _, background, background_err = shape_inputs(weighted, signal_dids, edges)
     is_bkg = ~np.isin(events["did"], signal_dids)
     out = []

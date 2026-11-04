@@ -18,6 +18,7 @@ from higgs4l.ml import (
     choose_threshold,
     classifier_sample,
     fit_classifier,
+    scale_weights,
     weighted_roc,
 )
 from higgs4l.selection import subset
@@ -163,11 +164,7 @@ def main():
     )
     high = test["score"] > threshold
 
-    scaled = {
-        "m4l": test["m4l"],
-        "did": test["did"],
-        "weight": HALF_SAMPLE_SCALE * test["weight"],
-    }
+    scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive_inputs = shape_inputs(scaled, signal_dids, edges)
     inclusive = asimov_z(
         shape_model(*inclusive_inputs, sig["lumi_rel_unc"], free_background=True)
