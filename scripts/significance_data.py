@@ -59,6 +59,7 @@ def observed(model, counts):
 
 
 def table(phase1, expected, obs):
+    """The markdown table comparing every significance method."""
     nb = phase1["counting_notebook_selection"]
     paired = expected["window_counting_paired"]
     toys = expected["toys_free_background"]
