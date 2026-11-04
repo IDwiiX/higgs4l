@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Recompute the reference numbers in docs/REFERENCE_VALUES.md.
 
-Needs only Python 3 and numpy/scipy. Run: python3 references/verify_reference_values.py
+Needs only Python 3 and scipy. Run: python3 references/verify_reference_values.py
 """
 from math import log, sqrt
 
