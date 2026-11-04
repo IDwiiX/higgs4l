@@ -1,4 +1,4 @@
-"""Gradient-boosted classifier and its validation."""
+"""Event classifier (gradient boosting, or logistic regression), validation, categories."""
 
 import numpy as np
 from scipy import stats
