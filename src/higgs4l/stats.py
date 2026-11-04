@@ -183,14 +183,14 @@ def mu_profile(
     return summary, scan, pars
 
 
-def counting_toys(s: float, b: float, n_toys: int, seed: int, n_max: int = 60) -> dict:
+def counting_toys(s: float, b: float, n_toys: int, seed: int) -> dict:
     """Toys for a known-background counting model.
 
-    q0 depends only on the integer count, so pyhf computes it once per count 0..n_max and
+    q0 depends only on the integer count, so pyhf computes it once per count 0..60 and
     each toy looks it up. P(n > 60) is below 1e-17 for the means used here.
     """
     model = counting_model(s, b)
-    q0_table = np.array([discovery_q0(model, [n]) for n in range(n_max + 1)])
+    q0_table = np.array([discovery_q0(model, [n]) for n in range(61)])
     rng = np.random.default_rng(seed)
     q0_sb = q0_table[rng.poisson(s + b, n_toys)]
     q0_b = q0_table[rng.poisson(b, n_toys)]
