@@ -62,6 +62,16 @@ def load_config() -> dict:
     return yaml.safe_load((ROOT / "config" / "analysis.yaml").read_text())
 
 
+def background_dids(cfg: dict) -> list[int]:
+    """Dataset IDs of the simulated backgrounds."""
+    return cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+
+
+def simulation_dids(cfg: dict) -> list[int]:
+    """Dataset IDs of all simulation, signal first."""
+    return cfg["samples"]["signal"] + background_dids(cfg)
+
+
 def file_urls(did, release: str, skim: str) -> list[str]:
     """Plain https URLs of one dataset (no fsspec simplecache, which is not persistent)."""
     atom.set_release(release)

@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from higgs4l.data import load_config, load_selected
+from higgs4l.data import background_dids, load_config, load_selected
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, window_yield
 
@@ -22,7 +22,7 @@ def notebook_window(cfg):
         events = select(load_selected(dids), cfg, "notebook")
         return window_yield(events["m4l"], np.abs(events["weight"]), edges, lo, hi)
 
-    background = cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+    background = background_dids(cfg)
     return {
         "signal": window(cfg["notebook_outputs_signal"]),
         "background": window(background),

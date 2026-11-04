@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from scipy.integrate import simpson
 
-from higgs4l.data import load_selected
+from higgs4l.data import load_selected, simulation_dids
 from higgs4l.massfit import (
     converged,
     fit_mass,
@@ -50,8 +50,7 @@ def test_p2a_pulls(cfg, toys):
 def test_p2b_simulation_pseudodata(cfg, frozen, toys):
     """P2-b: the calibrated fit to odd-half simulation returns 125.0 GeV within the
     expected data uncertainty (median toy MINOS error)."""
-    samples = cfg["samples"]
-    events = simulation(cfg, samples["signal"] + samples["zz"] + samples["other_bkg"])
+    events = simulation(cfg, simulation_dids(cfg))
     odd = events["eventNumber"] % 2 == 1
     result = fit_mass(load_model(frozen), events["m4l"][odd], 2 * events["weight"][odd])
     assert converged(result)

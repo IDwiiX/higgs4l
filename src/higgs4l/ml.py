@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from higgs4l.data import load_selected
+from higgs4l.data import load_selected, simulation_dids
 from higgs4l.kinematics import (
     cos_theta_star,
     event_p4,
@@ -57,15 +57,10 @@ def features(events: dict, mz: float) -> np.ndarray:
 
 def classifier_sample(cfg: dict) -> dict[str, np.ndarray]:
     """Paired simulation in the classifier range with features, class and half."""
-    samples = cfg["samples"]
-    mc = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
+    mc = select(load_selected(simulation_dids(cfg)), cfg, "paired")
     mc = in_range(mc, *cfg["classifier"]["range"])
     mc["X"] = features(mc, cfg["paired_selection"]["mz"])
-    mc["is_signal"] = np.isin(mc["did"], samples["signal"])
+    mc["is_signal"] = np.isin(mc["did"], cfg["samples"]["signal"])
     mc["even"] = mc["eventNumber"] % 2 == 0
     return mc
 

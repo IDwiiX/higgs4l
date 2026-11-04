@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import ROOT, load_config, load_selected, simulation_dids
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import (
@@ -33,12 +33,8 @@ MU_GRID = np.linspace(0, 2.5, 101)
 
 
 def simulation(cfg):
-    samples = cfg["samples"]
-    return select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
+    """All simulation after the paired selection, over the whole stored mass range."""
+    return select(load_selected(simulation_dids(cfg)), cfg, "paired")
 
 
 def build_model(cfg, mc, width, free_background):

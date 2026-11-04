@@ -11,7 +11,7 @@ import numpy as np
 from scipy.special import xlogy
 from scipy.stats import chi2
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import ROOT, load_config, load_selected, simulation_dids
 from higgs4l.massfit import (
     converged,
     fit_mass,
@@ -52,13 +52,8 @@ def goodness_of_fit(model, fit, m, edges):
 
 def data_vs_simulation(cfg, m, edges):
     """Data counts and simulated signal and background yields in coarse mass ranges."""
-    samples = cfg["samples"]
-    mc = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
-    is_signal = np.isin(mc["did"], samples["signal"])
+    mc = select(load_selected(simulation_dids(cfg)), cfg, "paired")
+    is_signal = np.isin(mc["did"], cfg["samples"]["signal"])
 
     def simulated(mask):
         return np.histogram(mc["m4l"][mask], edges, weights=mc["weight"][mask])[0]

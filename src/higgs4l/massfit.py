@@ -6,7 +6,7 @@ import numpy as np
 from iminuit import Minuit
 from scipy.integrate import simpson
 
-from higgs4l.data import load_selected
+from higgs4l.data import background_dids, load_selected
 from higgs4l.selection import in_range, select
 
 GRID_POINTS = 2001
@@ -324,7 +324,7 @@ def freeze_model(cfg: dict) -> dict:
     improvement = 2 * (candidates["exponential"].fval - candidates["bernstein2"].fval)
     # The extra Bernstein parameter must improve -2 ln L by more than 4 to be kept.
     function = "bernstein2" if improvement > 4 else "exponential"
-    all_bkg = cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+    all_bkg = background_dids(cfg)
 
     def total(dids):
         return float(simulation(cfg, dids)["weight"].sum())

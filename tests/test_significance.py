@@ -3,7 +3,7 @@ import pyhf
 import pytest
 from scipy import stats
 
-from higgs4l.data import load_selected
+from higgs4l.data import load_selected, simulation_dids
 from higgs4l.selection import select
 from higgs4l.stats import (
     asimov_data,
@@ -75,14 +75,9 @@ def test_p3h_toys_vs_asymptotic(cfg):
 def test_shape_model_asimov(cfg):
     """The full model returns the simulated yields at mu = 1 and fits mu = 1 on Asimov data."""
     sig = cfg["significance"]
-    samples = cfg["samples"]
-    mc = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
+    mc = select(load_selected(simulation_dids(cfg)), cfg, "paired")
     edges = bin_edges(*sig["range"], sig["bin_width"])
-    inputs = shape_inputs(mc, samples["signal"], edges)
+    inputs = shape_inputs(mc, cfg["samples"]["signal"], edges)
     model = shape_model(*inputs, sig["lumi_rel_unc"], free_background=True)
     data = asimov_data(model)
     expected = model.expected_data(model.config.suggested_init(), include_auxdata=False)

@@ -9,7 +9,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, load_config, simulation_dids
 from higgs4l.massfit import fit_mass, load_model, scan_mass, simulation
 from higgs4l.plotting import likelihood_scan
 
@@ -20,12 +20,10 @@ def odd_half_pseudodata(cfg):
     Also returns the signal and background content, which differ from the expected
     yields because a few background events carry large weights.
     """
-    samples = cfg["samples"]
-    dids = samples["signal"] + samples["zz"] + samples["other_bkg"]
-    events = simulation(cfg, dids)
+    events = simulation(cfg, simulation_dids(cfg))
     odd = events["eventNumber"] % 2 == 1
     m, w = events["m4l"][odd], 2 * events["weight"][odd]
-    is_signal = np.isin(events["did"][odd], samples["signal"])
+    is_signal = np.isin(events["did"][odd], cfg["samples"]["signal"])
     content = {
         "signal": float(w[is_signal].sum()),
         "background": float(w[~is_signal].sum()),
