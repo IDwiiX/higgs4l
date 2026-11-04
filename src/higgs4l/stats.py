@@ -195,6 +195,7 @@ def counting_toys(s: float, b: float, n_toys: int, seed: int) -> dict:
     q0_sb = q0_table[rng.poisson(s + b, n_toys)]
     q0_b = q0_table[rng.poisson(b, n_toys)]
     q0_asimov = discovery_q0(model, asimov_data(model))
+    # The toy count equal to s + b has q0 = q0_asimov up to the minimizer's precision.
     p0_toys = float(np.mean(q0_b >= q0_asimov - 1e-9))
     return {
         "n_toys": n_toys,
