@@ -9,7 +9,13 @@ import json
 import numpy as np
 
 from higgs4l.data import ROOT, load_config, load_selected
-from higgs4l.ml import category_inputs, classifier_sample, features, fit_classifier
+from higgs4l.ml import (
+    HALF_SAMPLE_SCALE,
+    category_inputs,
+    classifier_sample,
+    features,
+    fit_classifier,
+)
 from higgs4l.selection import in_range, select, subset
 from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
 
@@ -35,12 +41,17 @@ def main():
     data_high = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
     data_high = data_high > threshold
 
-    scaled = {"m4l": test["m4l"], "did": test["did"], "weight": 2 * test["weight"]}
+    scaled = {
+        "m4l": test["m4l"],
+        "did": test["did"],
+        "weight": HALF_SAMPLE_SCALE * test["weight"],
+    }
     inclusive = shape_model(
         *shape_inputs(scaled, signal_dids, edges), sig["lumi_rel_unc"], True
     )
+    high = test["score"] > threshold
     categories = category_model(
-        category_inputs(test, test["score"] > threshold, signal_dids, edges, 2.0),
+        category_inputs(test, high, signal_dids, edges, HALF_SAMPLE_SCALE),
         sig["lumi_rel_unc"],
     )
 

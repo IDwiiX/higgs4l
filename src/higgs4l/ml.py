@@ -30,6 +30,8 @@ FEATURES = [
     "cos_theta_star",
     "min_delta_r",
 ]
+# Yields from one half of the simulation (by eventNumber) scale to the full sample.
+HALF_SAMPLE_SCALE = 2.0
 
 
 def features(events: dict, mz: float) -> np.ndarray:
@@ -189,7 +191,9 @@ def choose_threshold(
     scan = []
     for eff in efficiencies:
         t = float(np.quantile(signal_scores, 1 - eff))
-        inputs = category_inputs(events, score > t, signal_dids, edges, 2.0)
+        inputs = category_inputs(
+            events, score > t, signal_dids, edges, HALF_SAMPLE_SCALE
+        )
         z = asimov_z(category_model(inputs, lumi_rel_unc))
         scan.append({"signal_efficiency": eff, "threshold": t, "z_asimov": z})
     best = max(scan, key=lambda row: row["z_asimov"])

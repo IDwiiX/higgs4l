@@ -12,6 +12,7 @@ import numpy as np
 from higgs4l.data import ROOT, load_config
 from higgs4l.ml import (
     FEATURES,
+    HALF_SAMPLE_SCALE,
     category_inputs,
     chi2_weighted,
     choose_threshold,
@@ -162,12 +163,16 @@ def main():
     )
     high = test["score"] > threshold
 
-    scaled = {"m4l": test["m4l"], "did": test["did"], "weight": 2 * test["weight"]}
+    scaled = {
+        "m4l": test["m4l"],
+        "did": test["did"],
+        "weight": HALF_SAMPLE_SCALE * test["weight"],
+    }
     inclusive_inputs = shape_inputs(scaled, signal_dids, edges)
     inclusive = asimov_z(
         shape_model(*inclusive_inputs, sig["lumi_rel_unc"], free_background=True)
     )
-    categories = category_inputs(test, high, signal_dids, edges, 2.0)
+    categories = category_inputs(test, high, signal_dids, edges, HALF_SAMPLE_SCALE)
     categorized = asimov_z(category_model(categories, sig["lumi_rel_unc"]))
 
     roc = {
