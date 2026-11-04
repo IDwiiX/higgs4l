@@ -162,7 +162,7 @@ def discovery_q0(model: pyhf.Model, data) -> float:
 def mu_profile(
     model: pyhf.Model, data, grid: np.ndarray
 ) -> tuple[dict, np.ndarray, np.ndarray]:
-    """Best-fit mu, its -2 Delta ln L = 1 interval from a profile scan, the scan, all parameters."""
+    """Best-fit mu and its -2 Delta ln L = 1 interval, the profile scan, all parameters."""
     pars, best = pyhf.infer.mle.fit(data, model, return_fitted_val=True)
     mu_hat = float(pars[model.config.poi_index])
     scan = np.array(
