@@ -8,7 +8,7 @@ import json
 import numpy as np
 
 from higgs4l.data import ROOT, load_config, load_selected
-from higgs4l.selection import select
+from higgs4l.selection import in_range, select
 from higgs4l.stats import (
     bin_edges,
     naive_z,
@@ -101,9 +101,8 @@ def main():
             "counting_window": counting(w["signal"], w["zz"] + w["other_bkg"]),
         }
 
-    signal = events["paired", "signal"]
-    in_window = (signal["m4l"] >= lo) & (signal["m4l"] < hi)
-    w, did = signal["weight"][in_window], signal["did"][in_window]
+    signal = in_range(events["paired", "signal"], lo, hi)
+    w, did = signal["weight"], signal["did"]
     signal_share = {
         str(d): float(w[did == d].sum() / w.sum()) for d in samples["signal"]
     }
