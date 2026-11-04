@@ -131,7 +131,7 @@ def save_selected(did, events: dict) -> None:
 
 
 def load_selected(dids) -> dict[str, np.ndarray]:
-    """Stored events of several datasets, concatenated, with a 'did' column."""
+    """Stored events of several datasets, concatenated, with a 'did' column (0 for data)."""
     parts = []
     for did in dids:
         with np.load(selected_path(did)) as f:
