@@ -11,6 +11,7 @@ from higgs4l.selection import in_range, select
 
 GRID_POINTS = 2001
 SAMPLING_POINTS = 20001
+M_H_START = 125.0
 DSCB_START = {
     "mu": 124.6,
     "sigma": 1.7,
@@ -128,7 +129,7 @@ def _minuit(model, m, w):
     n = w.sum()
     minuit = Minuit(
         lambda m_h, n_s, n_b: model.nll(m, w, m_h, n_s, n_b),
-        m_h=125.0,
+        m_h=M_H_START,
         n_s=0.5 * n,
         n_b=0.5 * n,
     )
