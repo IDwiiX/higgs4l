@@ -89,9 +89,8 @@ def fetch(url: str) -> Path:
 
 def read_events(path: Path) -> dict[str, np.ndarray]:
     """Analysis branches of one file; per-lepton branches become (n, 4) arrays."""
-    arrays = uproot.open(path)["analysis"].arrays(
-        LEPTON_BRANCHES + EVENT_BRANCHES, library="ak"
-    )
+    with uproot.open(path) as f:
+        arrays = f["analysis"].arrays(LEPTON_BRANCHES + EVENT_BRANCHES, library="ak")
     # The exactly4lep skim guarantees four leptons; to_regular fails loudly otherwise.
     events = {b: ak.to_numpy(ak.to_regular(arrays[b], axis=1)) for b in LEPTON_BRANCHES}
     events.update({b: ak.to_numpy(arrays[b]) for b in EVENT_BRANCHES})
