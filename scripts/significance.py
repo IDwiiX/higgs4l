@@ -25,6 +25,7 @@ from higgs4l.stats import (
     bin_edges,
     counting_toys,
     discovery_q0,
+    m4l_edges,
     mu_profile,
     naive_z,
     notebook_metric,
@@ -150,12 +151,14 @@ def main():
     p3h.pop("q0_pyhf")
     results["p3h_counting_toys"] = p3h
 
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
+    edges = m4l_edges(cfg)
     is_signal = np.isin(mc["did"], cfg["samples"]["signal"])
     s, b = (
         window_yield(
-            mc["m4l"][mask], mc["weight"][mask], edges, *hist["notebook_window"]
+            mc["m4l"][mask],
+            mc["weight"][mask],
+            edges,
+            *cfg["histogram"]["notebook_window"],
         )
         for mask in (is_signal, ~is_signal)
     )

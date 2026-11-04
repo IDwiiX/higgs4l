@@ -8,7 +8,7 @@ import numpy as np
 from higgs4l.data import load_config, load_selected, write_result
 from higgs4l.selection import in_range, select
 from higgs4l.stats import (
-    bin_edges,
+    m4l_edges,
     naive_z,
     notebook_metric,
     window_yield,
@@ -38,9 +38,8 @@ def counting(s, b):
 
 def main():
     cfg = load_config()
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
-    lo, hi = hist["notebook_window"]
+    edges = m4l_edges(cfg)
+    lo, hi = cfg["histogram"]["notebook_window"]
     samples = cfg["samples"]
     events = {
         (selection, group): select(load_selected(dids), cfg, selection)

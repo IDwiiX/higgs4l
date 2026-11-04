@@ -14,6 +14,12 @@ def bin_edges(lo: float, hi: float, width: float) -> np.ndarray:
     return np.arange(lo, hi + width, width)
 
 
+def m4l_edges(cfg: dict) -> np.ndarray:
+    """Edges of the configured m4l histogram."""
+    hist = cfg["histogram"]
+    return bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
+
+
 def window_yield(m4l, weights, edges, lo: float, hi: float) -> float:
     """Weighted histogram content summed over the whole bins between edges lo and hi."""
     counts, _ = np.histogram(m4l, bins=edges, weights=weights)
