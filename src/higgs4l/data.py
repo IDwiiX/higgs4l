@@ -14,6 +14,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = ROOT / "data" / "cache"
 SELECTED_DIR = ROOT / "data" / "selected"
+CHUNK_BYTES = 1 << 20
+DOWNLOAD_TIMEOUT_S = 600
 
 LEPTON_BRANCHES = [
     "lep_pt",
@@ -73,9 +75,12 @@ def fetch(url: str) -> Path:
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
     part = path.with_name(path.name + ".part")
-    with urllib.request.urlopen(url, timeout=600) as response, open(part, "wb") as f:
+    with (
+        urllib.request.urlopen(url, timeout=DOWNLOAD_TIMEOUT_S) as response,
+        open(part, "wb") as f,
+    ):
         size = int(response.headers["Content-Length"])
-        shutil.copyfileobj(response, f, 1 << 20)
+        shutil.copyfileobj(response, f, CHUNK_BYTES)
     if part.stat().st_size != size:
         raise OSError(f"incomplete download of {url}")
     part.rename(path)
@@ -97,7 +102,7 @@ def file_record(path: Path, url: str, events: dict) -> dict:
     """Provenance of one input file: identity, size, checksum and normalization branches."""
     sha = hashlib.sha256()
     with open(path, "rb") as f:
-        for block in iter(lambda: f.read(1 << 20), b""):
+        for block in iter(lambda: f.read(CHUNK_BYTES), b""):
             sha.update(block)
     record = {
         "file": path.name,
