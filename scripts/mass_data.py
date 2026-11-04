@@ -41,9 +41,8 @@ def goodness_of_fit(model, fit, m, edges):
     n, _ = np.histogram(m, edges)
 
     def density(x):
-        return fit["n_s"] * model.signal_pdf(x, fit["m_h"]) + fit[
-            "n_b"
-        ] * model.background_pdf(x)
+        signal = fit["n_s"] * model.signal_pdf(x, fit["m_h"])
+        return signal + fit["n_b"] * model.background_pdf(x)
 
     mu = np.array([integral(density, a, b) for a, b in zip(edges[:-1], edges[1:])])
     deviance = 2 * np.sum(mu - n + xlogy(n, n / mu))
