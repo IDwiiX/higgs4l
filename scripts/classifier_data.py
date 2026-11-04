@@ -8,7 +8,7 @@ import json
 
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import ROOT, load_config, load_selected, read_result
 from higgs4l.ml import (
     HALF_SAMPLE_SCALE,
     category_inputs,
@@ -29,7 +29,7 @@ def main():
     sig = cfg["significance"]
     signal_dids = cfg["samples"]["signal"]
     edges = bin_edges(*sig["range"], sig["bin_width"])
-    expected = json.loads((ROOT / "results" / "ml.json").read_text())
+    expected = read_result("ml")
 
     mc = classifier_sample(cfg)
     clf, kind, _ = fit_classifier(mc, c)

@@ -11,7 +11,13 @@ import numpy as np
 from scipy.special import xlogy
 from scipy.stats import chi2
 
-from higgs4l.data import ROOT, load_config, load_selected, simulation_dids
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    read_result,
+    simulation_dids,
+)
 from higgs4l.massfit import (
     converged,
     fit_mass,
@@ -103,8 +109,8 @@ def main():
     cfg = load_config()
     fit_cfg = cfg["mass_fit"]
     lo, hi = fit_cfg["range"]
-    frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
-    toys = json.loads((ROOT / "results" / "mass_toys.json").read_text())
+    frozen = read_result("mass_model")
+    toys = read_result("mass_toys")
     m = in_range(select(load_selected(["data"]), cfg, "paired"), lo, hi)["m4l"]
     edges = np.linspace(lo, hi, 13)  # 2.5 GeV bins
 

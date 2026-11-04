@@ -1,6 +1,7 @@
 """Sample access, local file cache and selected-event storage."""
 
 import hashlib
+import json
 import shutil
 import urllib.request
 from pathlib import Path
@@ -60,6 +61,11 @@ STORED_DTYPES = {
 def load_config() -> dict:
     """Read the analysis configuration."""
     return yaml.safe_load((ROOT / "config" / "analysis.yaml").read_text())
+
+
+def read_result(name: str) -> dict:
+    """Read results/<name>.json."""
+    return json.loads((ROOT / "results" / f"{name}.json").read_text())
 
 
 def background_dids(cfg: dict) -> list[int]:

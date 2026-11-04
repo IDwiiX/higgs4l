@@ -9,7 +9,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, simulation_dids
+from higgs4l.data import ROOT, load_config, read_result, simulation_dids
 from higgs4l.massfit import fit_mass, load_model, scan_mass, simulation
 from higgs4l.plotting import likelihood_scan
 
@@ -34,8 +34,8 @@ def odd_half_pseudodata(cfg):
 def main():
     cfg = load_config()
     m_true = cfg["mass_fit"]["m_true"]
-    frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
-    toys = json.loads((ROOT / "results" / "mass_toys.json").read_text())
+    frozen = read_result("mass_model")
+    toys = read_result("mass_toys")
     m, w, content = odd_half_pseudodata(cfg)
 
     nominal = load_model(frozen)

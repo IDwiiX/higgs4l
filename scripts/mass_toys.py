@@ -8,7 +8,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, load_config, read_result
 from higgs4l.massfit import converged, load_model, minos_error, pulls, run_toys
 from higgs4l.plotting import pull_histogram
 
@@ -34,7 +34,7 @@ def toy_summary(results, m_true):
 def main():
     cfg = load_config()
     fit_cfg = cfg["mass_fit"]
-    frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
+    frozen = read_result("mass_model")
     yields = frozen["expected_yields"]
     results = run_toys(
         load_model(frozen),

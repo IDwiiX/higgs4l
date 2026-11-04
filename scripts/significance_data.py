@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import ROOT, load_config, load_selected, read_result
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, discovery_q0, mu_profile
@@ -118,8 +118,8 @@ def table(phase1, expected, obs):
 def main():
     cfg = load_config()
     sig = cfg["significance"]
-    expected = json.loads((ROOT / "results" / "significance_expected.json").read_text())
-    phase1 = json.loads((ROOT / "results" / "phase1.json").read_text())
+    expected = read_result("significance_expected")
+    phase1 = read_result("phase1")
     mc = simulation(cfg)
     data = select(load_selected(["data"]), cfg, "paired")
 
