@@ -55,9 +55,9 @@ STORED_DTYPES = {
 }
 
 
-def load_config(path: Path = ROOT / "config" / "analysis.yaml") -> dict:
+def load_config() -> dict:
     """Read the analysis configuration."""
-    return yaml.safe_load(Path(path).read_text())
+    return yaml.safe_load((ROOT / "config" / "analysis.yaml").read_text())
 
 
 def file_urls(did, release: str, skim: str) -> list[str]:
