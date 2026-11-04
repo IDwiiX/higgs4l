@@ -66,9 +66,9 @@ def file_urls(did, release: str, skim: str) -> list[str]:
     return atom.get_urls(str(did), skim=skim, protocol="https", cache=False)
 
 
-def fetch(url: str, cache_dir: Path = CACHE_DIR) -> Path:
+def fetch(url: str) -> Path:
     """Download a file once into the cache and return its local path."""
-    path = Path(cache_dir) / url.rsplit("/", 1)[1]
+    path = CACHE_DIR / url.rsplit("/", 1)[1]
     if path.exists():
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
