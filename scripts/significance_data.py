@@ -11,14 +11,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    read_result,
+    write_result,
+)
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, discovery_q0, mu_profile
 
-from significance import build_model, simulation
+from significance import MU_LABEL, build_model, model_variants, simulation
 
 MU_GRID = np.linspace(0, 3, 121)
+CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
+samples, abs weights, pT cuts on stored lepton order); the corrected column is the paired
+selection (8 signal samples, signed weights, sorted pT, Z pairing). "Window" is 122.5-130 GeV.
+Shape-fit Z values are asymptotic (Z = sqrt(q0)); toys test the q0 distribution only up to
+Z = 3. The fixed-background observed Z is not a valid result: the free fit to the same data
+finds a background {mu_b:.2f} times the simulation.
+"""
 
 
 def observed(model, counts):
@@ -45,16 +58,8 @@ def observed(model, counts):
     return out, scan
 
 
-CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
-samples, abs weights, pT cuts on stored lepton order); the corrected column is the paired
-selection (8 signal samples, signed weights, sorted pT, Z pairing). "Window" is 122.5-130 GeV.
-Shape-fit Z values are asymptotic (Z = sqrt(q0)); toys test the q0 distribution only up to
-Z = 3. The fixed-background observed Z is not a valid result: the free fit to the same data
-finds a background {mu_b:.2f} times the simulation.
-"""
-
-
 def table(phase1, expected, obs):
+    """The markdown table comparing every significance method."""
     nb = phase1["counting_notebook_selection"]
     paired = expected["window_counting_paired"]
     toys = expected["toys_free_background"]
@@ -96,7 +101,7 @@ def table(phase1, expected, obs):
             f"**{obs['free_background']['z']:.2f}**",
         ),
         (
-            "Same, median of 1000 s+b toys",
+            f"Same, median of {toys['n_toys']} s+b toys",
             "-",
             f"{toys['median_z_sb_toys']:.2f} ± {toys['median_z_sb_toys_error']:.2f}",
             "-",
@@ -120,18 +125,14 @@ def table(phase1, expected, obs):
 def main():
     cfg = load_config()
     sig = cfg["significance"]
-    expected = json.loads((ROOT / "results" / "significance_expected.json").read_text())
-    phase1 = json.loads((ROOT / "results" / "phase1.json").read_text())
+    expected = read_result("significance_expected")
+    phase1 = read_result("phase1")
     mc = simulation(cfg)
     data = select(load_selected(["data"]), cfg, "paired")
 
     results = {"config": sig}
     scans = {}
-    for label, width, free in (
-        ("free_background", sig["bin_width"], True),
-        ("fixed_background", sig["bin_width"], False),
-        ("free_background_5GeV", sig["cross_check_bin_width"], True),
-    ):
+    for label, width, free in model_variants(sig):
         model, _ = build_model(cfg, mc, width, free)
         edges = bin_edges(*sig["range"], width)
         counts = np.histogram(data["m4l"], edges)[0]
@@ -142,16 +143,15 @@ def main():
             expected[label]["signal_yield"] + expected[label]["background_yield"]
         )
 
-    (ROOT / "results" / "significance.json").write_text(
-        json.dumps(results, indent=1) + "\n"
-    )
+    write_result("significance", results)
     (ROOT / "results" / "significance_table.md").write_text(
         table(phase1, expected, results)
     )
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    likelihood_scan(ax, MU_GRID, scans["free_background"], "Data, B normalization free")
-    ax.set_xlabel(r"Signal strength $\mu$")
+    likelihood_scan(
+        ax, MU_GRID, scans["free_background"], "Data, B normalization free", MU_LABEL
+    )
     fig.savefig(ROOT / "figures" / "significance_scan_data.png", dpi=150)
     plt.close(fig)
     print(json.dumps(results, indent=1))

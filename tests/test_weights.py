@@ -16,7 +16,11 @@ RECORD = {
     "ScaleFactor_LepTRIGGER": np.array([0.95]),
     "sum_of_weights": np.array([400.0]),
 }
-NOTEBOOK_FACTORS = ["filteff", "kfac", "xsec", "mcWeight"] + [
+NOTEBOOK_FACTORS = [
+    "filteff",
+    "kfac",
+    "xsec",
+    "mcWeight",
     "ScaleFactor_PILEUP",
     "ScaleFactor_ELE",
     "ScaleFactor_MUON",

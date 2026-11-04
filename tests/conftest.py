@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from higgs4l.data import load_config, load_selected
+from higgs4l.data import background_dids, load_config, load_selected
 from higgs4l.selection import select
-from higgs4l.stats import bin_edges, window_yield
+from higgs4l.stats import m4l_edges, window_yield
 
 
 @pytest.fixture(scope="session")
@@ -14,15 +14,14 @@ def cfg():
 @pytest.fixture(scope="session")
 def notebook_window(cfg):
     """Signal and background in the notebook window, with its selection and abs weights."""
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
-    lo, hi = hist["notebook_window"]
+    edges = m4l_edges(cfg)
+    lo, hi = cfg["histogram"]["notebook_window"]
 
     def window(dids):
         events = select(load_selected(dids), cfg, "notebook")
         return window_yield(events["m4l"], np.abs(events["weight"]), edges, lo, hi)
 
-    background = cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+    background = background_dids(cfg)
     return {
         "signal": window(cfg["notebook_outputs_signal"]),
         "background": window(background),

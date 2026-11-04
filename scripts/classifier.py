@@ -9,22 +9,26 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, load_config, write_result
 from higgs4l.ml import (
     FEATURES,
-    asimov_z,
+    HALF_SAMPLE_SCALE,
     category_inputs,
     chi2_weighted,
     choose_threshold,
     classifier_sample,
     fit_classifier,
+    scale_weights,
     weighted_roc,
 )
-from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
-
-
-def half(events, mask):
-    return {k: v[mask] for k, v in events.items()}
+from higgs4l.selection import subset
+from higgs4l.stats import (
+    asimov_z,
+    bin_edges,
+    category_model,
+    shape_inputs,
+    shape_model,
+)
 
 
 def sculpting(test, high, edges):
@@ -59,6 +63,7 @@ def sculpting(test, high, edges):
 
 
 def plot_roc(curves, path):
+    """ROC curves of the train and test halves."""
     fig, ax = plt.subplots(figsize=(7, 6))
     for label, (fpr, tpr, auc), style in curves:
         ax.plot(fpr, tpr, style, label=f"{label}, AUC {auc:.3f}")
@@ -72,6 +77,7 @@ def plot_roc(curves, path):
 
 
 def plot_scores(mc, ks, threshold, path):
+    """Train and test score distributions per class, with the category threshold."""
     edges = np.linspace(0, 1, 26)
     centres = (edges[:-1] + edges[1:]) / 2
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -105,6 +111,7 @@ def plot_scores(mc, ks, threshold, path):
 
 
 def plot_sculpting(result, path):
+    """Background m4l shape in each category and inclusively."""
     edges = np.array(result["edges"])
     centres = (edges[:-1] + edges[1:]) / 2
     high, low = np.array(result["high"]), np.array(result["low"])
@@ -148,7 +155,7 @@ def main():
     mc = classifier_sample(cfg)
     clf, kind, tried = fit_classifier(mc, c)
     mc["score"] = clf.predict_proba(mc["X"])[:, 1]
-    train_half, test = half(mc, mc["even"]), half(mc, ~mc["even"])
+    train_half, test = subset(mc, mc["even"]), subset(mc, ~mc["even"])
 
     threshold, scan = choose_threshold(
         train_half,
@@ -160,12 +167,12 @@ def main():
     )
     high = test["score"] > threshold
 
-    scaled = {"m4l": test["m4l"], "did": test["did"], "weight": 2 * test["weight"]}
+    scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive_inputs = shape_inputs(scaled, signal_dids, edges)
     inclusive = asimov_z(
         shape_model(*inclusive_inputs, sig["lumi_rel_unc"], free_background=True)
     )
-    categories = category_inputs(test, high, signal_dids, edges, 2.0)
+    categories = category_inputs(test, high, signal_dids, edges, HALF_SAMPLE_SCALE)
     categorized = asimov_z(category_model(categories, sig["lumi_rel_unc"]))
 
     roc = {
@@ -208,7 +215,7 @@ def main():
         "category Z both from the test half; category background = inclusive shape times "
         "the category's background fraction",
     }
-    (ROOT / "results" / "ml.json").write_text(json.dumps(results, indent=1) + "\n")
+    write_result("ml", results)
 
     figures = ROOT / "figures"
     plot_roc(

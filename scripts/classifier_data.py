@@ -8,9 +8,16 @@ import json
 
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected
-from higgs4l.ml import category_inputs, classifier_sample, features, fit_classifier
-from higgs4l.selection import in_range, select
+from higgs4l.data import load_config, load_selected, read_result, write_result
+from higgs4l.ml import (
+    HALF_SAMPLE_SCALE,
+    category_inputs,
+    classifier_sample,
+    features,
+    fit_classifier,
+    scale_weights,
+)
+from higgs4l.selection import in_range, select, subset
 from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
 
 from significance_data import observed
@@ -22,25 +29,28 @@ def main():
     sig = cfg["significance"]
     signal_dids = cfg["samples"]["signal"]
     edges = bin_edges(*sig["range"], sig["bin_width"])
-    expected = json.loads((ROOT / "results" / "ml.json").read_text())
+    expected = read_result("ml")
 
     mc = classifier_sample(cfg)
     clf, kind, _ = fit_classifier(mc, c)
     assert kind == expected["classifier"]
     mc["score"] = clf.predict_proba(mc["X"])[:, 1]
-    test = {k: v[~mc["even"]] for k, v in mc.items()}
+    test = subset(mc, ~mc["even"])
     threshold = expected["threshold"]
 
     data = in_range(select(load_selected(["data"]), cfg, "paired"), *c["range"])
-    data_high = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
-    data_high = data_high > threshold
+    data_score = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
+    data_high = data_score > threshold
 
-    scaled = {"m4l": test["m4l"], "did": test["did"], "weight": 2 * test["weight"]}
+    scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive = shape_model(
-        *shape_inputs(scaled, signal_dids, edges), sig["lumi_rel_unc"], True
+        *shape_inputs(scaled, signal_dids, edges),
+        sig["lumi_rel_unc"],
+        free_background=True,
     )
+    high = test["score"] > threshold
     categories = category_model(
-        category_inputs(test, test["score"] > threshold, signal_dids, edges, 2.0),
+        category_inputs(test, high, signal_dids, edges, HALF_SAMPLE_SCALE),
         sig["lumi_rel_unc"],
     )
 
@@ -61,7 +71,7 @@ def main():
         "templates from the odd simulation half x2, as in results/ml.json; the phase 3 "
         "observed Z with full-sample templates is in results/significance.json"
     )
-    (ROOT / "results" / "ml_data.json").write_text(json.dumps(results, indent=1) + "\n")
+    write_result("ml_data", results)
     print(json.dumps(results, indent=1))
 
 

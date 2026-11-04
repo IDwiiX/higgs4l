@@ -1,4 +1,4 @@
-"""Gradient-boosted classifier and its validation."""
+"""Event classifier (gradient boosting, or logistic regression), validation, categories."""
 
 import numpy as np
 from scipy import stats
@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from higgs4l.data import load_selected
+from higgs4l.data import load_selected, simulation_dids
 from higgs4l.kinematics import (
     cos_theta_star,
     event_p4,
@@ -15,8 +15,8 @@ from higgs4l.kinematics import (
     rapidity,
     transverse_momentum,
 )
-from higgs4l.selection import in_range, select, z_pairs
-from higgs4l.stats import asimov_data, category_model, discovery_q0, shape_inputs
+from higgs4l.selection import in_range, select, subset, z_pairs
+from higgs4l.stats import asimov_z, category_model, shape_inputs
 
 FEATURES = [
     "lep_pt_1",
@@ -30,6 +30,8 @@ FEATURES = [
     "cos_theta_star",
     "min_delta_r",
 ]
+# Yields from one half of the simulation (by eventNumber) scale to the full sample.
+HALF_SAMPLE_SCALE = 2.0
 
 
 def features(events: dict, mz: float) -> np.ndarray:
@@ -57,15 +59,10 @@ def features(events: dict, mz: float) -> np.ndarray:
 
 def classifier_sample(cfg: dict) -> dict[str, np.ndarray]:
     """Paired simulation in the classifier range with features, class and half."""
-    samples = cfg["samples"]
-    mc = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
+    mc = select(load_selected(simulation_dids(cfg)), cfg, "paired")
     mc = in_range(mc, *cfg["classifier"]["range"])
     mc["X"] = features(mc, cfg["paired_selection"]["mz"])
-    mc["is_signal"] = np.isin(mc["did"], samples["signal"])
+    mc["is_signal"] = np.isin(mc["did"], cfg["samples"]["signal"])
     mc["even"] = mc["eventNumber"] % 2 == 0
     return mc
 
@@ -162,6 +159,15 @@ def chi2_weighted(w1, s1, w2, s2) -> tuple[float, float]:
     return x2, float(stats.chi2.sf(x2, len(w1) - 1))
 
 
+def scale_weights(events: dict, scale: float) -> dict[str, np.ndarray]:
+    """The columns the templates need, with the weights times scale."""
+    return {
+        "m4l": events["m4l"],
+        "did": events["did"],
+        "weight": scale * events["weight"],
+    }
+
+
 def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> list:
     """Templates of the high- and low-score categories, weights times scale.
 
@@ -169,21 +175,17 @@ def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> lis
     times the category's background fraction f, with errors times sqrt(f): the simulated
     background is too sparse for per-category shapes (docs/learning/phase4.md, section 7).
     """
-    weighted = {"m4l": events["m4l"], "did": events["did"]}
-    weighted["weight"] = scale * events["weight"]
+    weighted = scale_weights(events, scale)
     _, _, background, background_err = shape_inputs(weighted, signal_dids, edges)
     is_bkg = ~np.isin(events["did"], signal_dids)
     out = []
     for mask in (high, ~high):
-        part = {k: v[mask] for k, v in weighted.items()}
-        signal, signal_err, _, _ = shape_inputs(part, signal_dids, edges)
+        signal, signal_err, _, _ = shape_inputs(
+            subset(weighted, mask), signal_dids, edges
+        )
         f = events["weight"][mask & is_bkg].sum() / events["weight"][is_bkg].sum()
         out.append((signal, signal_err, f * background, np.sqrt(f) * background_err))
     return out
-
-
-def asimov_z(model) -> float:
-    return float(np.sqrt(discovery_q0(model, asimov_data(model))))
 
 
 def choose_threshold(
@@ -197,7 +199,9 @@ def choose_threshold(
     scan = []
     for eff in efficiencies:
         t = float(np.quantile(signal_scores, 1 - eff))
-        inputs = category_inputs(events, score > t, signal_dids, edges, 2.0)
+        inputs = category_inputs(
+            events, score > t, signal_dids, edges, HALF_SAMPLE_SCALE
+        )
         z = asimov_z(category_model(inputs, lumi_rel_unc))
         scan.append({"signal_efficiency": eff, "threshold": t, "z_asimov": z})
     best = max(scan, key=lambda row: row["z_asimov"])

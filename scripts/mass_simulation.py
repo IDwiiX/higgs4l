@@ -9,10 +9,15 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected
-from higgs4l.massfit import fit_mass, load_model, scan_mass
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    read_result,
+    simulation_dids,
+    write_result,
+)
+from higgs4l.massfit import fit_mass, load_model, scan_mass, simulation
 from higgs4l.plotting import likelihood_scan
-from higgs4l.selection import in_range, select
 
 
 def odd_half_pseudodata(cfg):
@@ -21,13 +26,10 @@ def odd_half_pseudodata(cfg):
     Also returns the signal and background content, which differ from the expected
     yields because a few background events carry large weights.
     """
-    samples = cfg["samples"]
-    dids = samples["signal"] + samples["zz"] + samples["other_bkg"]
-    events = select(load_selected(dids), cfg, "paired")
-    events = in_range(events, *cfg["mass_fit"]["range"])
+    events = simulation(cfg, simulation_dids(cfg))
     odd = events["eventNumber"] % 2 == 1
     m, w = events["m4l"][odd], 2 * events["weight"][odd]
-    is_signal = np.isin(events["did"][odd], samples["signal"])
+    is_signal = np.isin(events["did"][odd], cfg["samples"]["signal"])
     content = {
         "signal": float(w[is_signal].sum()),
         "background": float(w[~is_signal].sum()),
@@ -38,8 +40,8 @@ def odd_half_pseudodata(cfg):
 def main():
     cfg = load_config()
     m_true = cfg["mass_fit"]["m_true"]
-    frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
-    toys = json.loads((ROOT / "results" / "mass_toys.json").read_text())
+    frozen = read_result("mass_model")
+    toys = read_result("mass_toys")
     m, w, content = odd_half_pseudodata(cfg)
 
     nominal = load_model(frozen)
@@ -52,10 +54,7 @@ def main():
     }
     # Signal-only closure on the odd half of the shape samples: sensitive to the sign of
     # delta (a flipped sign would move m_hat by 2 |delta| = 0.7 GeV).
-    signal = in_range(
-        select(load_selected(cfg["mass_fit"]["signal_shape_dids"]), cfg, "paired"),
-        *cfg["mass_fit"]["range"],
-    )
+    signal = simulation(cfg, cfg["mass_fit"]["signal_shape_dids"])
     odd = signal["eventNumber"] % 2 == 1
     w_sig = signal["weight"][odd]
     closure = fit_mass(
@@ -78,9 +77,7 @@ def main():
         "shift_all_background_shape": fits["all_background_shape"]["m_h"]
         - fits["nominal"]["m_h"],
     }
-    (ROOT / "results" / "mass_simulation.json").write_text(
-        json.dumps(result, indent=1, default=float) + "\n"
-    )
+    write_result("mass_simulation", result)
 
     grid = np.linspace(123.0, 127.0, 81)
     fig, ax = plt.subplots(figsize=(8, 6))

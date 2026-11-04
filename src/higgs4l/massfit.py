@@ -6,11 +6,12 @@ import numpy as np
 from iminuit import Minuit
 from scipy.integrate import simpson
 
-from higgs4l.data import load_selected
+from higgs4l.data import background_dids, load_selected
 from higgs4l.selection import in_range, select
 
 GRID_POINTS = 2001
 SAMPLING_POINTS = 20001
+M_H_START = 125.0
 DSCB_START = {
     "mu": 124.6,
     "sigma": 1.7,
@@ -26,6 +27,8 @@ DSCB_LIMITS = {
     "alpha_r": (0.3, 5),
     "n_r": (1.01, 100),
 }
+GAUSS_START = {"mu": 124.6, "sigma": 2.0}
+GAUSS_LIMITS = {"sigma": (0.5, 5)}
 
 
 def dscb(m, mu, sigma, alpha_l, n_l, alpha_r, n_r):
@@ -97,13 +100,16 @@ class MassModel:
     background: str  # "exponential" or "bernstein2"
     background_shape: dict
 
-    def signal_pdf(self, m, m_h):
-        f = dscb if self.signal == "dscb" else gauss
-        g = lambda x: f(x, m_h + self.delta, **self.signal_shape)
-        return g(m) / integral(g, self.lo, self.hi)
-
     def __post_init__(self):
         self._background_norm = integral(self._background, self.lo, self.hi)
+
+    def signal_pdf(self, m, m_h):
+        f = dscb if self.signal == "dscb" else gauss
+
+        def shape(x):
+            return f(x, m_h + self.delta, **self.signal_shape)
+
+        return shape(m) / integral(shape, self.lo, self.hi)
 
     def _background(self, m):
         if self.background == "exponential":
@@ -123,7 +129,7 @@ def _minuit(model, m, w):
     n = w.sum()
     minuit = Minuit(
         lambda m_h, n_s, n_b: model.nll(m, w, m_h, n_s, n_b),
-        m_h=125.0,
+        m_h=M_H_START,
         n_s=0.5 * n,
         n_b=0.5 * n,
     )
@@ -163,6 +169,16 @@ def fit_mass(model: MassModel, m, w=None) -> dict:
             "minos_valid": error.is_valid,
         }
     return result
+
+
+def converged(fit: dict) -> bool:
+    """Valid minimum, accurate covariance and valid MINOS errors (P2-c)."""
+    return fit["valid"] and fit["accurate"] and fit["minos_valid"]
+
+
+def minos_error(fit: dict) -> float:
+    """Symmetrized MINOS error on m_H."""
+    return (fit["minos_upper"] - fit["minos_lower"]) / 2
 
 
 def scan_mass(model: MassModel, m, grid, w=None) -> np.ndarray:
@@ -276,7 +292,7 @@ def freeze_model(cfg: dict) -> dict:
     m_sig, w_sig = signal["m4l"][even], signal["weight"][even]
     dscb_fit = weighted_shape_fit(dscb, m_sig, w_sig, lo, hi, DSCB_START, DSCB_LIMITS)
     gauss_fit = weighted_shape_fit(
-        gauss, m_sig, w_sig, lo, hi, {"mu": 124.6, "sigma": 2.0}, {"sigma": (0.5, 5)}
+        gauss, m_sig, w_sig, lo, hi, GAUSS_START, GAUSS_LIMITS
     )
 
     def exp_pdf(m, slope):
@@ -308,7 +324,7 @@ def freeze_model(cfg: dict) -> dict:
     improvement = 2 * (candidates["exponential"].fval - candidates["bernstein2"].fval)
     # The extra Bernstein parameter must improve -2 ln L by more than 4 to be kept.
     function = "bernstein2" if improvement > 4 else "exponential"
-    all_bkg = cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+    all_bkg = background_dids(cfg)
 
     def total(dids):
         return float(simulation(cfg, dids)["weight"].sum())

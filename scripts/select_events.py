@@ -4,7 +4,6 @@ Writes data/selected/*.npz, results/cutflow.json, results/cutflow.md and
 results/provenance.json. Needs the network on the first run (about 1 GB).
 """
 
-import json
 import platform
 from importlib.metadata import version
 
@@ -20,6 +19,7 @@ from higgs4l.data import (
     load_config,
     read_events,
     save_selected,
+    write_result,
 )
 from higgs4l.selection import cumulative, notebook_cuts, paired_cuts, preselection
 from higgs4l.weights import event_weight
@@ -62,6 +62,7 @@ def metadata_check(did, record):
 
 
 def cutflow_markdown(cutflow):
+    """The cutflow as one markdown table per selection."""
     lines = []
     for selection, groups in cutflow.items():
         lines += [
@@ -122,7 +123,7 @@ def main():
 
     results = ROOT / "results"
     results.mkdir(exist_ok=True)
-    (results / "cutflow.json").write_text(json.dumps(cutflow, indent=1) + "\n")
+    write_result("cutflow", cutflow)
     (results / "cutflow.md").write_text(cutflow_markdown(cutflow))
     provenance = {
         "release": cfg["release"],
@@ -135,7 +136,7 @@ def main():
         "notebook": NOTEBOOK,
         "files": files,
     }
-    (results / "provenance.json").write_text(json.dumps(provenance, indent=1) + "\n")
+    write_result("provenance", provenance)
 
 
 if __name__ == "__main__":

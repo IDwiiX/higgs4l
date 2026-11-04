@@ -1,6 +1,7 @@
 """Sample access, local file cache and selected-event storage."""
 
 import hashlib
+import json
 import shutil
 import urllib.request
 from pathlib import Path
@@ -14,6 +15,8 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = ROOT / "data" / "cache"
 SELECTED_DIR = ROOT / "data" / "selected"
+CHUNK_BYTES = 1 << 20
+DOWNLOAD_TIMEOUT_S = 600
 
 LEPTON_BRANCHES = [
     "lep_pt",
@@ -55,9 +58,30 @@ STORED_DTYPES = {
 }
 
 
-def load_config(path: Path = ROOT / "config" / "analysis.yaml") -> dict:
+def load_config() -> dict:
     """Read the analysis configuration."""
-    return yaml.safe_load(Path(path).read_text())
+    return yaml.safe_load((ROOT / "config" / "analysis.yaml").read_text())
+
+
+def read_result(name: str) -> dict:
+    """Read results/<name>.json."""
+    return json.loads((ROOT / "results" / f"{name}.json").read_text())
+
+
+def write_result(name: str, result: dict) -> None:
+    """Write results/<name>.json; numpy scalars are stored as floats."""
+    text = json.dumps(result, indent=1, default=float) + "\n"
+    (ROOT / "results" / f"{name}.json").write_text(text)
+
+
+def background_dids(cfg: dict) -> list[int]:
+    """Dataset IDs of the simulated backgrounds."""
+    return cfg["samples"]["zz"] + cfg["samples"]["other_bkg"]
+
+
+def simulation_dids(cfg: dict) -> list[int]:
+    """Dataset IDs of all simulation, signal first."""
+    return cfg["samples"]["signal"] + background_dids(cfg)
 
 
 def file_urls(did, release: str, skim: str) -> list[str]:
@@ -66,16 +90,19 @@ def file_urls(did, release: str, skim: str) -> list[str]:
     return atom.get_urls(str(did), skim=skim, protocol="https", cache=False)
 
 
-def fetch(url: str, cache_dir: Path = CACHE_DIR) -> Path:
+def fetch(url: str) -> Path:
     """Download a file once into the cache and return its local path."""
-    path = Path(cache_dir) / url.rsplit("/", 1)[1]
+    path = CACHE_DIR / url.rsplit("/", 1)[1]
     if path.exists():
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
     part = path.with_name(path.name + ".part")
-    with urllib.request.urlopen(url, timeout=600) as response, open(part, "wb") as f:
+    with (
+        urllib.request.urlopen(url, timeout=DOWNLOAD_TIMEOUT_S) as response,
+        open(part, "wb") as f,
+    ):
         size = int(response.headers["Content-Length"])
-        shutil.copyfileobj(response, f, 1 << 20)
+        shutil.copyfileobj(response, f, CHUNK_BYTES)
     if part.stat().st_size != size:
         raise OSError(f"incomplete download of {url}")
     part.rename(path)
@@ -84,9 +111,8 @@ def fetch(url: str, cache_dir: Path = CACHE_DIR) -> Path:
 
 def read_events(path: Path) -> dict[str, np.ndarray]:
     """Analysis branches of one file; per-lepton branches become (n, 4) arrays."""
-    arrays = uproot.open(path)["analysis"].arrays(
-        LEPTON_BRANCHES + EVENT_BRANCHES, library="ak"
-    )
+    with uproot.open(path) as f:
+        arrays = f["analysis"].arrays(LEPTON_BRANCHES + EVENT_BRANCHES, library="ak")
     # The exactly4lep skim guarantees four leptons; to_regular fails loudly otherwise.
     events = {b: ak.to_numpy(ak.to_regular(arrays[b], axis=1)) for b in LEPTON_BRANCHES}
     events.update({b: ak.to_numpy(arrays[b]) for b in EVENT_BRANCHES})
@@ -97,7 +123,7 @@ def file_record(path: Path, url: str, events: dict) -> dict:
     """Provenance of one input file: identity, size, checksum and normalization branches."""
     sha = hashlib.sha256()
     with open(path, "rb") as f:
-        for block in iter(lambda: f.read(1 << 20), b""):
+        for block in iter(lambda: f.read(CHUNK_BYTES), b""):
             sha.update(block)
     record = {
         "file": path.name,
@@ -113,6 +139,7 @@ def file_record(path: Path, url: str, events: dict) -> dict:
 
 
 def selected_path(did) -> Path:
+    """Stored-events file of one dataset."""
     return SELECTED_DIR / ("data.npz" if did == "data" else f"mc_{did}.npz")
 
 
@@ -126,7 +153,7 @@ def save_selected(did, events: dict) -> None:
 
 
 def load_selected(dids) -> dict[str, np.ndarray]:
-    """Stored events of several datasets, concatenated, with a 'did' column."""
+    """Stored events of several datasets, concatenated, with a 'did' column (0 for data)."""
     parts = []
     for did in dids:
         with np.load(selected_path(did)) as f:

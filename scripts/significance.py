@@ -10,14 +10,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    simulation_dids,
+    write_result,
+)
 from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import (
     asimov_data,
+    asimov_z,
     bin_edges,
     counting_toys,
     discovery_q0,
+    m4l_edges,
     mu_profile,
     naive_z,
     notebook_metric,
@@ -29,18 +37,25 @@ from higgs4l.stats import (
 )
 
 MU_GRID = np.linspace(0, 2.5, 101)
+MU_LABEL = r"Signal strength $\mu$"
 
 
 def simulation(cfg):
-    samples = cfg["samples"]
-    return select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
+    """All simulation after the paired selection, over the whole stored mass range."""
+    return select(load_selected(simulation_dids(cfg)), cfg, "paired")
+
+
+def model_variants(sig):
+    """Label, bin width and free background flag of each significance model."""
+    return (
+        ("free_background", sig["bin_width"], True),
+        ("fixed_background", sig["bin_width"], False),
+        ("free_background_5GeV", sig["cross_check_bin_width"], True),
     )
 
 
 def build_model(cfg, mc, width, free_background):
+    """The m4l template model at one bin width, with its input histograms."""
     sig = cfg["significance"]
     edges = bin_edges(*sig["range"], width)
     inputs = shape_inputs(mc, cfg["samples"]["signal"], edges)
@@ -69,6 +84,7 @@ def model_toys(model, n_toys, seed):
 
 
 def toy_summary(toys, z_a):
+    """Toy median against the Asimov Z, and b-only tails against asymptotics."""
     n = len(toys["b"])
     z_sb = np.sqrt(toys["sb"])
     tails = {}
@@ -95,6 +111,7 @@ def toy_summary(toys, z_a):
 
 
 def counting_rows(s, b):
+    """The window significances that enter the comparison table."""
     return {
         "S": s,
         "B": b,
@@ -112,15 +129,11 @@ def main():
 
     results = {"config": sig, "selection": "paired, sorted pT, signed weights"}
     models = {}
-    for label, width, free in (
-        ("free_background", sig["bin_width"], True),
-        ("fixed_background", sig["bin_width"], False),
-        ("free_background_5GeV", sig["cross_check_bin_width"], True),
-    ):
+    for label, width, free in model_variants(sig):
         model, inputs = build_model(cfg, mc, width, free)
         models[label] = model
         results[label] = {
-            "z_asimov": float(np.sqrt(discovery_q0(model, asimov_data(model)))),
+            "z_asimov": asimov_z(model),
             "signal_yield": float(inputs[0].sum()),
             "background_yield": float(inputs[2].sum()),
             # Relative MC statistical width of the staterror factor in each bin.
@@ -141,24 +154,23 @@ def main():
     p3h.pop("q0_pyhf")
     results["p3h_counting_toys"] = p3h
 
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
+    edges = m4l_edges(cfg)
     is_signal = np.isin(mc["did"], cfg["samples"]["signal"])
     s, b = (
         window_yield(
-            mc["m4l"][mask], mc["weight"][mask], edges, *hist["notebook_window"]
+            mc["m4l"][mask],
+            mc["weight"][mask],
+            edges,
+            *cfg["histogram"]["notebook_window"],
         )
         for mask in (is_signal, ~is_signal)
     )
     results["window_counting_paired"] = counting_rows(s, b)
 
-    (ROOT / "results" / "significance_expected.json").write_text(
-        json.dumps(results, indent=1) + "\n"
-    )
+    write_result("significance_expected", results)
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    likelihood_scan(ax, MU_GRID, scan, "Asimov, simulation")
-    ax.set_xlabel(r"Signal strength $\mu$")
+    likelihood_scan(ax, MU_GRID, scan, "Asimov, simulation", MU_LABEL)
     fig.savefig(ROOT / "figures" / "significance_scan_asimov.png", dpi=150)
     plt.close(fig)
     print(json.dumps(results, indent=1))

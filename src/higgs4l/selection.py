@@ -110,6 +110,11 @@ def preselection(events: dict, cfg: dict) -> np.ndarray:
     return np.logical_and.reduce(list(cuts.values())) & pt
 
 
+def subset(events: dict, mask: np.ndarray) -> dict[str, np.ndarray]:
+    """The events passing a mask, every column kept."""
+    return {k: v[mask] for k, v in events.items()}
+
+
 def select(events: dict, cfg: dict, name: str) -> dict[str, np.ndarray]:
     """Stored events passing a selection, with m4l, m12 and m34 added.
 
@@ -125,7 +130,7 @@ def select(events: dict, cfg: dict, name: str) -> dict[str, np.ndarray]:
         mask = np.logical_and.reduce(
             list(z_cuts(events, cfg["paired_selection"]).values())
         )
-    out = {k: v[mask] for k, v in events.items()}
+    out = subset(events, mask)
     out["m4l"] = four_lepton_mass(out)
     out["m12"], out["m34"] = m12[mask], m34[mask]
     return out
@@ -151,5 +156,4 @@ def _insert_after(cuts: dict, after: str, name: str, cut) -> dict:
 
 def in_range(events: dict, lo: float, hi: float) -> dict[str, np.ndarray]:
     """Selected events with lo <= m4l < hi."""
-    keep = (events["m4l"] >= lo) & (events["m4l"] < hi)
-    return {k: v[keep] for k, v in events.items()}
+    return subset(events, (events["m4l"] >= lo) & (events["m4l"] < hi))

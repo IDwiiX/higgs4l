@@ -7,7 +7,7 @@ and its significance estimate, and then adds three things: an unbinned likelihoo
 Higgs mass with a calibrated, toy-validated uncertainty (m_H = 125.06 ± 0.93 GeV); a
 profile-likelihood significance with pyhf (3.96σ observed, 6.64σ expected); and a classifier
 on lepton kinematics whose expected gain, measured on events it never saw, turns out to be
-zero. 
+zero.
 
 ## Results
 
@@ -59,7 +59,6 @@ cd report && latexmk -pdf main.tex
 `make_all.py` runs the scripts in order: `phase1_numbers`, `plot_m4l`, `mass_model`,
 `mass_toys`, `mass_simulation`, `mass_data`, `significance`, `significance_data`,
 `classifier`, `classifier_data`. Each script's docstring says what it reads and writes.
-
 
 ## Credits
 

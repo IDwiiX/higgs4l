@@ -6,10 +6,18 @@ import numpy as np
 import pyhf
 from scipy.stats import norm
 
+MU = {"name": "mu", "type": "normfactor", "data": None}
+
 
 def bin_edges(lo: float, hi: float, width: float) -> np.ndarray:
     """Histogram edges from lo to hi inclusive, built as in the notebook."""
     return np.arange(lo, hi + width, width)
+
+
+def m4l_edges(cfg: dict) -> np.ndarray:
+    """Edges of the configured m4l histogram."""
+    hist = cfg["histogram"]
+    return bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
 
 
 def window_yield(m4l, weights, edges, lo: float, hi: float) -> float:
@@ -40,9 +48,6 @@ def z_asimov_unc(s: float, b: float, sigma_b: float) -> float:
     t1 = (s + b) * log((s + b) * (b + v) / (b * b + (s + b) * v))
     t2 = (b * b / v) * log(1 + v * s / (b * (b + v)))
     return sqrt(2 * (t1 - t2))
-
-
-MU = {"name": "mu", "type": "normfactor", "data": None}
 
 
 def counting_model(s: float, b: float, rel_unc: float | None = None) -> pyhf.Model:
@@ -159,10 +164,15 @@ def discovery_q0(model: pyhf.Model, data) -> float:
     )
 
 
+def asimov_z(model: pyhf.Model) -> float:
+    """Expected discovery significance, sqrt(q0) on the Asimov data."""
+    return float(np.sqrt(discovery_q0(model, asimov_data(model))))
+
+
 def mu_profile(
     model: pyhf.Model, data, grid: np.ndarray
 ) -> tuple[dict, np.ndarray, np.ndarray]:
-    """Best-fit mu, its -2 Delta ln L = 1 interval from a profile scan, the scan, all parameters."""
+    """Best-fit mu and its -2 Delta ln L = 1 interval, the profile scan, all parameters."""
     pars, best = pyhf.infer.mle.fit(data, model, return_fitted_val=True)
     mu_hat = float(pars[model.config.poi_index])
     scan = np.array(
@@ -184,18 +194,19 @@ def mu_profile(
     return summary, scan, pars
 
 
-def counting_toys(s: float, b: float, n_toys: int, seed: int, n_max: int = 60) -> dict:
+def counting_toys(s: float, b: float, n_toys: int, seed: int) -> dict:
     """Toys for a known-background counting model.
 
-    q0 depends only on the integer count, so pyhf computes it once per count 0..n_max and
+    q0 depends only on the integer count, so pyhf computes it once per count 0..60 and
     each toy looks it up. P(n > 60) is below 1e-17 for the means used here.
     """
     model = counting_model(s, b)
-    q0_table = np.array([discovery_q0(model, [n]) for n in range(n_max + 1)])
+    q0_table = np.array([discovery_q0(model, [n]) for n in range(61)])
     rng = np.random.default_rng(seed)
     q0_sb = q0_table[rng.poisson(s + b, n_toys)]
     q0_b = q0_table[rng.poisson(b, n_toys)]
     q0_asimov = discovery_q0(model, asimov_data(model))
+    # The toy count equal to s + b has q0 = q0_asimov up to the minimizer's precision.
     p0_toys = float(np.mean(q0_b >= q0_asimov - 1e-9))
     return {
         "n_toys": n_toys,

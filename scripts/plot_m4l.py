@@ -6,13 +6,12 @@ import numpy as np
 from higgs4l.data import ROOT, load_config, load_selected
 from higgs4l.plotting import m4l_stack
 from higgs4l.selection import select
-from higgs4l.stats import bin_edges
+from higgs4l.stats import m4l_edges
 
 
 def main():
     cfg = load_config()
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
+    edges = m4l_edges(cfg)
     samples = cfg["samples"]
     out = ROOT / "figures"
     out.mkdir(exist_ok=True)

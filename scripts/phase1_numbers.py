@@ -3,14 +3,12 @@
 Reads data/selected and writes results/phase1.json.
 """
 
-import json
-
 import numpy as np
 
-from higgs4l.data import ROOT, load_config, load_selected
-from higgs4l.selection import select
+from higgs4l.data import load_config, load_selected, write_result
+from higgs4l.selection import in_range, select
 from higgs4l.stats import (
-    bin_edges,
+    m4l_edges,
     naive_z,
     notebook_metric,
     window_yield,
@@ -28,6 +26,7 @@ GROUPS = ("signal", "zz", "other_bkg")
 
 
 def counting(s, b):
+    """Counting significances of a window with signal s and background b."""
     return {
         "S": s,
         "B": b,
@@ -40,9 +39,8 @@ def counting(s, b):
 
 def main():
     cfg = load_config()
-    hist = cfg["histogram"]
-    edges = bin_edges(hist["m4l_min"], hist["m4l_max"], hist["bin_width"])
-    lo, hi = hist["notebook_window"]
+    edges = m4l_edges(cfg)
+    lo, hi = cfg["histogram"]["notebook_window"]
     samples = cfg["samples"]
     events = {
         (selection, group): select(load_selected(dids), cfg, selection)
@@ -101,9 +99,8 @@ def main():
             "counting_window": counting(w["signal"], w["zz"] + w["other_bkg"]),
         }
 
-    signal = events["paired", "signal"]
-    in_window = (signal["m4l"] >= lo) & (signal["m4l"] < hi)
-    w, did = signal["weight"][in_window], signal["did"][in_window]
+    signal = in_range(events["paired", "signal"], lo, hi)
+    w, did = signal["weight"], signal["did"]
     signal_share = {
         str(d): float(w[did == d].sum() / w.sum()) for d in samples["signal"]
     }
@@ -119,8 +116,7 @@ def main():
         "selection_comparison": comparison,
         "paired_signal_share_in_window": signal_share,
     }
-    out = ROOT / "results" / "phase1.json"
-    out.write_text(json.dumps(results, indent=1) + "\n")
+    write_result("phase1", results)
     for stage, c in comparison.items():
         r, z = c["yields"], c["counting_window"]
         print(

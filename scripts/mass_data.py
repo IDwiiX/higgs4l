@@ -11,12 +11,21 @@ import numpy as np
 from scipy.special import xlogy
 from scipy.stats import chi2
 
-from higgs4l.data import ROOT, load_config, load_selected
+from higgs4l.data import (
+    ROOT,
+    load_config,
+    load_selected,
+    read_result,
+    simulation_dids,
+    write_result,
+)
 from higgs4l.massfit import (
+    converged,
     fit_mass,
     generate_toy,
     integral,
     load_model,
+    minos_error,
     run_toys,
     scan_mass,
 )
@@ -31,15 +40,6 @@ REFERENCES = {
 N_TOYS_FITTED_YIELDS = 500
 
 
-def converged(fit):
-    return fit["valid"] and fit["accurate"] and fit["minos_valid"]
-
-
-def minos_error(fit):
-    """Symmetrized MINOS error."""
-    return (fit["minos_upper"] - fit["minos_lower"]) / 2
-
-
 def goodness_of_fit(model, fit, m, edges):
     """Binned Poisson deviance of the fitted model, with 3 fitted parameters.
 
@@ -48,9 +48,8 @@ def goodness_of_fit(model, fit, m, edges):
     n, _ = np.histogram(m, edges)
 
     def density(x):
-        return fit["n_s"] * model.signal_pdf(x, fit["m_h"]) + fit[
-            "n_b"
-        ] * model.background_pdf(x)
+        signal = fit["n_s"] * model.signal_pdf(x, fit["m_h"])
+        return signal + fit["n_b"] * model.background_pdf(x)
 
     mu = np.array([integral(density, a, b) for a, b in zip(edges[:-1], edges[1:])])
     deviance = 2 * np.sum(mu - n + xlogy(n, n / mu))
@@ -60,13 +59,8 @@ def goodness_of_fit(model, fit, m, edges):
 
 def data_vs_simulation(cfg, m, edges):
     """Data counts and simulated signal and background yields in coarse mass ranges."""
-    samples = cfg["samples"]
-    mc = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
-    is_signal = np.isin(mc["did"], samples["signal"])
+    mc = select(load_selected(simulation_dids(cfg)), cfg, "paired")
+    is_signal = np.isin(mc["did"], cfg["samples"]["signal"])
 
     def simulated(mask):
         return np.histogram(mc["m4l"][mask], edges, weights=mc["weight"][mask])[0]
@@ -116,9 +110,10 @@ def main():
     cfg = load_config()
     fit_cfg = cfg["mass_fit"]
     lo, hi = fit_cfg["range"]
-    frozen = json.loads((ROOT / "results" / "mass_model.json").read_text())
-    toys = json.loads((ROOT / "results" / "mass_toys.json").read_text())
+    frozen = read_result("mass_model")
+    toys = read_result("mass_toys")
     m = in_range(select(load_selected(["data"]), cfg, "paired"), lo, hi)["m4l"]
+    edges = np.linspace(lo, hi, 13)  # 2.5 GeV bins
 
     nominal, gaussian = load_model(frozen), load_model(frozen, signal="gauss")
     fits = {
@@ -159,7 +154,7 @@ def main():
             "n_b": (best["n_b"] - expected["background"]) / best["n_b_error"],
         },
         "data_vs_simulation": data_vs_simulation(cfg, m, [lo, 120, 130, hi]),
-        "goodness_of_fit": goodness_of_fit(nominal, best, m, np.linspace(lo, hi, 13)),
+        "goodness_of_fit": goodness_of_fit(nominal, best, m, edges),
         "toys_at_fitted_yields": toys_at_fitted_yields(
             nominal, gaussian, best, error, N_TOYS_FITTED_YIELDS, fit_cfg["seed"]
         ),
@@ -172,12 +167,10 @@ def main():
             name: best["m_h"] - ref["m_h"] for name, ref in REFERENCES.items()
         },
     }
-    (ROOT / "results" / "mass_fit.json").write_text(
-        json.dumps(result, indent=1, default=float) + "\n"
-    )
+    write_result("mass_fit", result)
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    mass_fit_overlay(ax, m, nominal, best, np.linspace(lo, hi, 13), cfg["lumi_fb"])
+    mass_fit_overlay(ax, m, nominal, best, edges, cfg["lumi_fb"])
     fig.savefig(ROOT / "figures" / "mass_fit_data.png", dpi=150)
     plt.close(fig)
 

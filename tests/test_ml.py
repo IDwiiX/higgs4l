@@ -5,7 +5,6 @@ from sklearn.metrics import roc_auc_score
 
 from higgs4l.ml import (
     FEATURES,
-    asimov_z,
     category_inputs,
     chi2_weighted,
     choose_threshold,
@@ -15,7 +14,14 @@ from higgs4l.ml import (
     weighted_ks,
     weighted_roc,
 )
-from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
+from higgs4l.selection import subset
+from higgs4l.stats import (
+    asimov_z,
+    bin_edges,
+    category_model,
+    shape_inputs,
+    shape_model,
+)
 
 pytestmark = pytest.mark.phase4
 
@@ -101,7 +107,7 @@ def test_background_shape_reported(cfg, sample, classifier):
     sig = cfg["significance"]
     even = sample["even"]
     threshold, _ = choose_threshold(
-        {k: v[even] for k, v in sample.items()},
+        subset(sample, even),
         score[even],
         c["signal_efficiencies"],
         cfg["samples"]["signal"],
@@ -133,7 +139,9 @@ def test_uninformative_split_has_no_gain(cfg, sample):
     s, s_err, b, b_err = shape_inputs(sample, cfg["samples"]["signal"], edges)
     f = 0.3
     split = [(g * s, np.sqrt(g) * s_err, g * b, np.sqrt(g) * b_err) for g in (f, 1 - f)]
-    inclusive = asimov_z(shape_model(s, s_err, b, b_err, sig["lumi_rel_unc"], True))
+    inclusive = asimov_z(
+        shape_model(s, s_err, b, b_err, sig["lumi_rel_unc"], free_background=True)
+    )
     categorized = asimov_z(category_model(split, sig["lumi_rel_unc"]))
     print(f"P4-c: inclusive {inclusive:.6f}, proportional split {categorized:.6f}")
     assert categorized == pytest.approx(inclusive, rel=1e-6)

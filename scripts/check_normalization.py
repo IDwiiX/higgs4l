@@ -3,22 +3,19 @@
 Reads only the mcWeight branch over https (network). Writes results/normalization_check.json.
 """
 
-import json
-
 import atlasopenmagic as atom
 import numpy as np
 import uproot
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import file_urls, load_config, write_result
 
 DID = 700600
 
 
 def main():
     cfg = load_config()
-    atom.set_release(cfg["release"])
     total, entries = 0.0, 0
-    for url in atom.get_urls(str(DID), skim="noskim", protocol="https", cache=False):
+    for url in file_urls(DID, cfg["release"], "noskim"):
         tree = uproot.open(url, handler=uproot.source.http.HTTPSource)["analysis"]
         total += tree["mcWeight"].array(library="np").astype(np.float64).sum()
         entries += tree.num_entries
@@ -32,8 +29,7 @@ def main():
         "sum_of_weights_branch": sum_of_weights,
         "ratio": total / sum_of_weights,
     }
-    out = ROOT / "results" / "normalization_check.json"
-    out.write_text(json.dumps(result, indent=1) + "\n")
+    write_result("normalization_check", result)
     print(result)
 
 
