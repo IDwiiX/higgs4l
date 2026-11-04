@@ -60,7 +60,6 @@ cd report && latexmk -pdf main.tex
 `mass_toys`, `mass_simulation`, `mass_data`, `significance`, `significance_data`,
 `classifier`, `classifier_data`. Each script's docstring says what it reads and writes.
 
-
 ## Credits
 
 - ATLAS Collaboration, ATLAS Open Data for education and outreach, release
