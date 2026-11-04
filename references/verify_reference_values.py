@@ -42,7 +42,7 @@ def main():
     print("== Official ATLAS notebook (HZZAnalysis.ipynb, 2025e-13tev-beta, 36.6 fb^-1) ==")
     n_tot, n_bkg = 28.729140024845144, 10.300928352079978
     s = n_tot - n_bkg
-    print(f"window 122.5-130 GeV (bins 17:20 of 2.5 GeV from 80 GeV)")
+    print("window 122.5-130 GeV (bins 17:20 of 2.5 GeV from 80 GeV)")
     print(f"printed N_sig = {n_tot:.3f}  (this is signal + background)")
     print(f"printed N_bg  = {n_bkg:.3f}")
     print(f"true signal S = {s:.3f}")
