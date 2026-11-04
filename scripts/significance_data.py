@@ -19,6 +19,13 @@ from higgs4l.stats import bin_edges, discovery_q0, mu_profile
 from significance import build_model, simulation
 
 MU_GRID = np.linspace(0, 3, 121)
+CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
+samples, abs weights, pT cuts on stored lepton order); the corrected column is the paired
+selection (8 signal samples, signed weights, sorted pT, Z pairing). "Window" is 122.5-130 GeV.
+Shape-fit Z values are asymptotic (Z = sqrt(q0)); toys test the q0 distribution only up to
+Z = 3. The fixed-background observed Z is not a valid result: the free fit to the same data
+finds a background {mu_b:.2f} times the simulation.
+"""
 
 
 def observed(model, counts):
@@ -43,15 +50,6 @@ def observed(model, counts):
             "z_asimov_at_fitted_background": float(z_post),
         }
     return out, scan
-
-
-CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
-samples, abs weights, pT cuts on stored lepton order); the corrected column is the paired
-selection (8 signal samples, signed weights, sorted pT, Z pairing). "Window" is 122.5-130 GeV.
-Shape-fit Z values are asymptotic (Z = sqrt(q0)); toys test the q0 distribution only up to
-Z = 3. The fixed-background observed Z is not a valid result: the free fit to the same data
-finds a background {mu_b:.2f} times the simulation.
-"""
 
 
 def table(phase1, expected, obs):
