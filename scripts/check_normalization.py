@@ -9,16 +9,15 @@ import atlasopenmagic as atom
 import numpy as np
 import uproot
 
-from higgs4l.data import ROOT, load_config
+from higgs4l.data import ROOT, file_urls, load_config
 
 DID = 700600
 
 
 def main():
     cfg = load_config()
-    atom.set_release(cfg["release"])
     total, entries = 0.0, 0
-    for url in atom.get_urls(str(DID), skim="noskim", protocol="https", cache=False):
+    for url in file_urls(DID, cfg["release"], "noskim"):
         tree = uproot.open(url, handler=uproot.source.http.HTTPSource)["analysis"]
         total += tree["mcWeight"].array(library="np").astype(np.float64).sum()
         entries += tree.num_entries
