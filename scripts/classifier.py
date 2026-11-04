@@ -63,6 +63,7 @@ def sculpting(test, high, edges):
 
 
 def plot_roc(curves, path):
+    """ROC curves of the train and test halves."""
     fig, ax = plt.subplots(figsize=(7, 6))
     for label, (fpr, tpr, auc), style in curves:
         ax.plot(fpr, tpr, style, label=f"{label}, AUC {auc:.3f}")
@@ -76,6 +77,7 @@ def plot_roc(curves, path):
 
 
 def plot_scores(mc, ks, threshold, path):
+    """Train and test score distributions per class, with the category threshold."""
     edges = np.linspace(0, 1, 26)
     centres = (edges[:-1] + edges[1:]) / 2
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -109,6 +111,7 @@ def plot_scores(mc, ks, threshold, path):
 
 
 def plot_sculpting(result, path):
+    """Background m4l shape in each category and inclusively."""
     edges = np.array(result["edges"])
     centres = (edges[:-1] + edges[1:]) / 2
     high, low = np.array(result["high"]), np.array(result["low"])
