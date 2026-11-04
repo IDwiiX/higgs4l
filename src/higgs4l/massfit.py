@@ -99,8 +99,11 @@ class MassModel:
 
     def signal_pdf(self, m, m_h):
         f = dscb if self.signal == "dscb" else gauss
-        g = lambda x: f(x, m_h + self.delta, **self.signal_shape)
-        return g(m) / integral(g, self.lo, self.hi)
+
+        def shape(x):
+            return f(x, m_h + self.delta, **self.signal_shape)
+
+        return shape(m) / integral(shape, self.lo, self.hi)
 
     def __post_init__(self):
         self._background_norm = integral(self._background, self.lo, self.hi)
