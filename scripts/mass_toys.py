@@ -15,22 +15,19 @@ from higgs4l.plotting import pull_histogram
 
 def toy_summary(results, m_true):
     """Pull mean and width with their statistical errors, and the convergence count."""
-    ok = np.array([converged(r) for r in results])
-    pull = pulls([r for r, good in zip(results, ok) if good], m_true)
+    good = [r for r in results if converged(r)]
+    pull = pulls(good, m_true)
     n = len(pull)
     width = pull.std(ddof=1)
-    minos = np.array([minos_error(r) for r in results])
     return {
         "n_toys": len(results),
-        "n_failed": int((~ok).sum()),
+        "n_failed": len(results) - n,
         "pull_mean": float(pull.mean()),
         "pull_mean_error": float(width / np.sqrt(n)),
         "pull_width": float(width),
         "pull_width_error": float(width / np.sqrt(2 * (n - 1))),
-        "median_minos_error": float(np.median(minos[ok])),
-        "median_m_hat": float(
-            np.median([r["m_h"] for r, good in zip(results, ok) if good])
-        ),
+        "median_minos_error": float(np.median([minos_error(r) for r in good])),
+        "median_m_hat": float(np.median([r["m_h"] for r in good])),
     }, pull
 
 
