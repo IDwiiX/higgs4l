@@ -117,6 +117,7 @@ def file_record(path: Path, url: str, events: dict) -> dict:
 
 
 def selected_path(did) -> Path:
+    """Stored-events file of one dataset."""
     return SELECTED_DIR / ("data.npz" if did == "data" else f"mc_{did}.npz")
 
 
