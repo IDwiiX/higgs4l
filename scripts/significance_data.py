@@ -96,7 +96,7 @@ def table(phase1, expected, obs):
             f"**{obs['free_background']['z']:.2f}**",
         ),
         (
-            "Same, median of 1000 s+b toys",
+            f"Same, median of {toys['n_toys']} s+b toys",
             "-",
             f"{toys['median_z_sb_toys']:.2f} ± {toys['median_z_sb_toys_error']:.2f}",
             "-",
