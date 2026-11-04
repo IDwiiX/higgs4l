@@ -39,8 +39,8 @@ def main():
     threshold = expected["threshold"]
 
     data = in_range(select(load_selected(["data"]), cfg, "paired"), *c["range"])
-    data_high = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
-    data_high = data_high > threshold
+    data_score = clf.predict_proba(features(data, cfg["paired_selection"]["mz"]))[:, 1]
+    data_high = data_score > threshold
 
     scaled = scale_weights(test, HALF_SAMPLE_SCALE)
     inclusive = shape_model(
