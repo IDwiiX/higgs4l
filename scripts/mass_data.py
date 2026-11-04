@@ -13,6 +13,7 @@ from scipy.stats import chi2
 
 from higgs4l.data import ROOT, load_config, load_selected
 from higgs4l.massfit import (
+    converged,
     fit_mass,
     generate_toy,
     integral,
@@ -29,10 +30,6 @@ REFERENCES = {
     "pdg_2026": {"m_h": 125.13, "error": 0.11},
 }
 N_TOYS_FITTED_YIELDS = 500
-
-
-def converged(fit):
-    return fit["valid"] and fit["accurate"] and fit["minos_valid"]
 
 
 def minos_error(fit):

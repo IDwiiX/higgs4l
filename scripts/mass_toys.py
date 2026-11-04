@@ -9,13 +9,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from higgs4l.data import ROOT, load_config
-from higgs4l.massfit import load_model, pulls, run_toys
+from higgs4l.massfit import converged, load_model, pulls, run_toys
 from higgs4l.plotting import pull_histogram
 
 
 def toy_summary(results, m_true):
     """Pull mean and width with their statistical errors, and the convergence count."""
-    ok = np.array([r["valid"] and r["accurate"] and r["minos_valid"] for r in results])
+    ok = np.array([converged(r) for r in results])
     pull = pulls([r for r, good in zip(results, ok) if good], m_true)
     n = len(pull)
     width = pull.std(ddof=1)

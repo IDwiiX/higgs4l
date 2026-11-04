@@ -4,6 +4,7 @@ from scipy.integrate import simpson
 
 from higgs4l.data import load_selected
 from higgs4l.massfit import (
+    converged,
     fit_mass,
     freeze_model,
     generate_toy,
@@ -36,17 +37,9 @@ def toys(cfg, frozen):
     )
 
 
-def converged(results):
-    return np.array(
-        [r["valid"] and r["accurate"] and r["minos_valid"] for r in results]
-    )
-
-
 def test_p2a_pulls(cfg, toys):
     """P2-a: pulls over 2000 toys at expected yields have mean 0 and width 1 (+-0.05)."""
-    pull = pulls(
-        [t for t, ok in zip(toys, converged(toys)) if ok], cfg["mass_fit"]["m_true"]
-    )
+    pull = pulls([t for t in toys if converged(t)], cfg["mass_fit"]["m_true"])
     print(f"P2-a pull mean {pull.mean():.4f}, width {pull.std(ddof=1):.4f}")
     assert abs(pull.mean()) < 0.05
     assert abs(pull.std(ddof=1) - 1) < 0.05
@@ -64,11 +57,8 @@ def test_p2b_simulation_pseudodata(cfg, frozen, toys):
     events = in_range(events, *cfg["mass_fit"]["range"])
     odd = events["eventNumber"] % 2 == 1
     result = fit_mass(load_model(frozen), events["m4l"][odd], 2 * events["weight"][odd])
-    assert result["valid"] and result["accurate"] and result["minos_valid"]
-    ok = converged(toys)
-    errors = [
-        (t["minos_upper"] - t["minos_lower"]) / 2 for t, good in zip(toys, ok) if good
-    ]
+    assert converged(result)
+    errors = [(t["minos_upper"] - t["minos_lower"]) / 2 for t in toys if converged(t)]
     assert abs(result["m_h"] - cfg["mass_fit"]["m_true"]) < np.median(errors)
 
 
@@ -76,7 +66,7 @@ def test_p2c_convergence(toys):
     """P2-c: every toy converges (valid minimum, accurate covariance, valid MINOS). Any
     failure fails the test, so that it is looked at and reported rather than absorbed.
     """
-    n_failed = int((~converged(toys)).sum())
+    n_failed = sum(not converged(t) for t in toys)
     print(f"P2-c failed toy fits: {n_failed} of {len(toys)}")
     assert n_failed == 0
 
@@ -134,5 +124,4 @@ def test_p2c_data_fit(cfg, frozen):
         ("gauss", "nominal"),
         ("dscb", "all_backgrounds"),
     ]:
-        result = fit_mass(load_model(frozen, signal, background), m)
-        assert result["valid"] and result["accurate"] and result["minos_valid"]
+        assert converged(fit_mass(load_model(frozen, signal, background), m))

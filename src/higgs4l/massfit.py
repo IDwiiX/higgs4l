@@ -171,6 +171,11 @@ def fit_mass(model: MassModel, m, w=None) -> dict:
     return result
 
 
+def converged(fit: dict) -> bool:
+    """Valid minimum, accurate covariance and valid MINOS errors (P2-c)."""
+    return fit["valid"] and fit["accurate"] and fit["minos_valid"]
+
+
 def scan_mass(model: MassModel, m, grid, w=None) -> np.ndarray:
     """Profile -2 Delta ln L in m_H on a grid (N_s and N_b refitted at each point)."""
     w = np.ones(len(m)) if w is None else w
