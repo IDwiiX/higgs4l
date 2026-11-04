@@ -16,7 +16,7 @@ from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, discovery_q0, mu_profile
 
-from significance import build_model, model_variants, simulation
+from significance import MU_LABEL, build_model, model_variants, simulation
 
 MU_GRID = np.linspace(0, 3, 121)
 CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
@@ -144,8 +144,9 @@ def main():
     )
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    likelihood_scan(ax, MU_GRID, scans["free_background"], "Data, B normalization free")
-    ax.set_xlabel(r"Signal strength $\mu$")
+    likelihood_scan(
+        ax, MU_GRID, scans["free_background"], "Data, B normalization free", MU_LABEL
+    )
     fig.savefig(ROOT / "figures" / "significance_scan_data.png", dpi=150)
     plt.close(fig)
     print(json.dumps(results, indent=1))

@@ -73,11 +73,11 @@ def pull_histogram(ax, pull, mean, width):
     ax.legend(loc="upper right", fontsize="small")
 
 
-def likelihood_scan(ax, grid, m2dnll, label):
+def likelihood_scan(ax, grid, m2dnll, label, xlabel=r"$m_H$ [GeV]"):
     """Profile -2 Delta ln L against the scanned parameter, with the 1 sigma line."""
     ax.plot(grid, m2dnll, "k-", label=label)
     ax.axhline(1.0, color="r", linestyle="--", linewidth=1)
-    ax.set_xlabel(r"$m_H$ [GeV]")
+    ax.set_xlabel(xlabel)
     ax.set_ylabel(r"$-2\,\Delta\ln L$")
     ax.set_ylim(0, 6)
     ax.legend(loc="upper right", fontsize="small")

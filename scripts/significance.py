@@ -30,6 +30,7 @@ from higgs4l.stats import (
 )
 
 MU_GRID = np.linspace(0, 2.5, 101)
+MU_LABEL = r"Signal strength $\mu$"
 
 
 def simulation(cfg):
@@ -159,8 +160,7 @@ def main():
     )
 
     fig, ax = plt.subplots(figsize=(8, 6))
-    likelihood_scan(ax, MU_GRID, scan, "Asimov, simulation")
-    ax.set_xlabel(r"Signal strength $\mu$")
+    likelihood_scan(ax, MU_GRID, scan, "Asimov, simulation", MU_LABEL)
     fig.savefig(ROOT / "figures" / "significance_scan_asimov.png", dpi=150)
     plt.close(fig)
     print(json.dumps(results, indent=1))
