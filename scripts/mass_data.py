@@ -18,6 +18,7 @@ from higgs4l.massfit import (
     generate_toy,
     integral,
     load_model,
+    minos_error,
     run_toys,
     scan_mass,
 )
@@ -30,11 +31,6 @@ REFERENCES = {
     "pdg_2026": {"m_h": 125.13, "error": 0.11},
 }
 N_TOYS_FITTED_YIELDS = 500
-
-
-def minos_error(fit):
-    """Symmetrized MINOS error."""
-    return (fit["minos_upper"] - fit["minos_lower"]) / 2
 
 
 def goodness_of_fit(model, fit, m, edges):

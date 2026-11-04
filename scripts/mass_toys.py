@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from higgs4l.data import ROOT, load_config
-from higgs4l.massfit import converged, load_model, pulls, run_toys
+from higgs4l.massfit import converged, load_model, minos_error, pulls, run_toys
 from higgs4l.plotting import pull_histogram
 
 
@@ -19,7 +19,7 @@ def toy_summary(results, m_true):
     pull = pulls([r for r, good in zip(results, ok) if good], m_true)
     n = len(pull)
     width = pull.std(ddof=1)
-    minos = np.array([(r["minos_upper"] - r["minos_lower"]) / 2 for r in results])
+    minos = np.array([minos_error(r) for r in results])
     return {
         "n_toys": len(results),
         "n_failed": int((~ok).sum()),

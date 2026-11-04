@@ -9,6 +9,7 @@ from higgs4l.massfit import (
     freeze_model,
     generate_toy,
     load_model,
+    minos_error,
     pulls,
     run_toys,
 )
@@ -58,7 +59,7 @@ def test_p2b_simulation_pseudodata(cfg, frozen, toys):
     odd = events["eventNumber"] % 2 == 1
     result = fit_mass(load_model(frozen), events["m4l"][odd], 2 * events["weight"][odd])
     assert converged(result)
-    errors = [(t["minos_upper"] - t["minos_lower"]) / 2 for t in toys if converged(t)]
+    errors = [minos_error(t) for t in toys if converged(t)]
     assert abs(result["m_h"] - cfg["mass_fit"]["m_true"]) < np.median(errors)
 
 

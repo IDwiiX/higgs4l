@@ -176,6 +176,11 @@ def converged(fit: dict) -> bool:
     return fit["valid"] and fit["accurate"] and fit["minos_valid"]
 
 
+def minos_error(fit: dict) -> float:
+    """Symmetrized MINOS error on m_H."""
+    return (fit["minos_upper"] - fit["minos_lower"]) / 2
+
+
 def scan_mass(model: MassModel, m, grid, w=None) -> np.ndarray:
     """Profile -2 Delta ln L in m_H on a grid (N_s and N_b refitted at each point)."""
     w = np.ones(len(m)) if w is None else w
