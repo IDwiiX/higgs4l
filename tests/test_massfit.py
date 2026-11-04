@@ -12,6 +12,7 @@ from higgs4l.massfit import (
     minos_error,
     pulls,
     run_toys,
+    simulation,
 )
 from higgs4l.selection import in_range, select
 
@@ -50,12 +51,7 @@ def test_p2b_simulation_pseudodata(cfg, frozen, toys):
     """P2-b: the calibrated fit to odd-half simulation returns 125.0 GeV within the
     expected data uncertainty (median toy MINOS error)."""
     samples = cfg["samples"]
-    events = select(
-        load_selected(samples["signal"] + samples["zz"] + samples["other_bkg"]),
-        cfg,
-        "paired",
-    )
-    events = in_range(events, *cfg["mass_fit"]["range"])
+    events = simulation(cfg, samples["signal"] + samples["zz"] + samples["other_bkg"])
     odd = events["eventNumber"] % 2 == 1
     result = fit_mass(load_model(frozen), events["m4l"][odd], 2 * events["weight"][odd])
     assert converged(result)
@@ -103,10 +99,7 @@ def test_fit_recovers_known_toy(frozen):
 def test_signal_closure(cfg, frozen):
     """Odd-half H->ZZ*->4l simulation, never used for the shape or delta, is fitted at
     125.0 GeV within 3 MC-statistical sigma. This is the check on the sign of delta."""
-    signal = in_range(
-        select(load_selected(cfg["mass_fit"]["signal_shape_dids"]), cfg, "paired"),
-        *cfg["mass_fit"]["range"],
-    )
+    signal = simulation(cfg, cfg["mass_fit"]["signal_shape_dids"])
     odd = signal["eventNumber"] % 2 == 1
     w = signal["weight"][odd]
     result = fit_mass(
