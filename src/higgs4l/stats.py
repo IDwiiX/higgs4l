@@ -6,6 +6,8 @@ import numpy as np
 import pyhf
 from scipy.stats import norm
 
+MU = {"name": "mu", "type": "normfactor", "data": None}
+
 
 def bin_edges(lo: float, hi: float, width: float) -> np.ndarray:
     """Histogram edges from lo to hi inclusive, built as in the notebook."""
@@ -40,9 +42,6 @@ def z_asimov_unc(s: float, b: float, sigma_b: float) -> float:
     t1 = (s + b) * log((s + b) * (b + v) / (b * b + (s + b) * v))
     t2 = (b * b / v) * log(1 + v * s / (b * (b + v)))
     return sqrt(2 * (t1 - t2))
-
-
-MU = {"name": "mu", "type": "normfactor", "data": None}
 
 
 def counting_model(s: float, b: float, rel_unc: float | None = None) -> pyhf.Model:
