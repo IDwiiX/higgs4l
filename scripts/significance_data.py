@@ -16,7 +16,7 @@ from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import bin_edges, discovery_q0, mu_profile
 
-from significance import build_model, simulation
+from significance import build_model, model_variants, simulation
 
 MU_GRID = np.linspace(0, 3, 121)
 CAPTION = """Discovery significance Z. The notebook column is the notebook selection (7 signal
@@ -125,11 +125,7 @@ def main():
 
     results = {"config": sig}
     scans = {}
-    for label, width, free in (
-        ("free_background", sig["bin_width"], True),
-        ("fixed_background", sig["bin_width"], False),
-        ("free_background_5GeV", sig["cross_check_bin_width"], True),
-    ):
+    for label, width, free in model_variants(sig):
         model, _ = build_model(cfg, mc, width, free)
         edges = bin_edges(*sig["range"], width)
         counts = np.histogram(data["m4l"], edges)[0]

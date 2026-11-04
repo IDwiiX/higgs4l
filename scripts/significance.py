@@ -37,6 +37,15 @@ def simulation(cfg):
     return select(load_selected(simulation_dids(cfg)), cfg, "paired")
 
 
+def model_variants(sig):
+    """Label, bin width and free background flag of each significance model."""
+    return (
+        ("free_background", sig["bin_width"], True),
+        ("fixed_background", sig["bin_width"], False),
+        ("free_background_5GeV", sig["cross_check_bin_width"], True),
+    )
+
+
 def build_model(cfg, mc, width, free_background):
     sig = cfg["significance"]
     edges = bin_edges(*sig["range"], width)
@@ -109,11 +118,7 @@ def main():
 
     results = {"config": sig, "selection": "paired, sorted pT, signed weights"}
     models = {}
-    for label, width, free in (
-        ("free_background", sig["bin_width"], True),
-        ("fixed_background", sig["bin_width"], False),
-        ("free_background_5GeV", sig["cross_check_bin_width"], True),
-    ):
+    for label, width, free in model_variants(sig):
         model, inputs = build_model(cfg, mc, width, free)
         models[label] = model
         results[label] = {
