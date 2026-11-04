@@ -2,6 +2,8 @@ import importlib
 
 import pytest
 
+pytestmark = pytest.mark.phase1
+
 MODULES = [
     "data",
     "selection",
