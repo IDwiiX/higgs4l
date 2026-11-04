@@ -158,6 +158,11 @@ def discovery_q0(model: pyhf.Model, data) -> float:
     )
 
 
+def asimov_z(model: pyhf.Model) -> float:
+    """Expected discovery significance, sqrt(q0) on the Asimov data."""
+    return float(np.sqrt(discovery_q0(model, asimov_data(model))))
+
+
 def mu_profile(
     model: pyhf.Model, data, grid: np.ndarray
 ) -> tuple[dict, np.ndarray, np.ndarray]:

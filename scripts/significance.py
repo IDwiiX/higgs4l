@@ -15,6 +15,7 @@ from higgs4l.plotting import likelihood_scan
 from higgs4l.selection import select
 from higgs4l.stats import (
     asimov_data,
+    asimov_z,
     bin_edges,
     counting_toys,
     discovery_q0,
@@ -120,7 +121,7 @@ def main():
         model, inputs = build_model(cfg, mc, width, free)
         models[label] = model
         results[label] = {
-            "z_asimov": float(np.sqrt(discovery_q0(model, asimov_data(model)))),
+            "z_asimov": asimov_z(model),
             "signal_yield": float(inputs[0].sum()),
             "background_yield": float(inputs[2].sum()),
             # Relative MC statistical width of the staterror factor in each bin.

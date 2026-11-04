@@ -16,7 +16,7 @@ from higgs4l.kinematics import (
     transverse_momentum,
 )
 from higgs4l.selection import in_range, select, z_pairs
-from higgs4l.stats import asimov_data, category_model, discovery_q0, shape_inputs
+from higgs4l.stats import asimov_z, category_model, shape_inputs
 
 FEATURES = [
     "lep_pt_1",
@@ -180,10 +180,6 @@ def category_inputs(events: dict, high, signal_dids, edges, scale: float) -> lis
         f = events["weight"][mask & is_bkg].sum() / events["weight"][is_bkg].sum()
         out.append((signal, signal_err, f * background, np.sqrt(f) * background_err))
     return out
-
-
-def asimov_z(model) -> float:
-    return float(np.sqrt(discovery_q0(model, asimov_data(model))))
 
 
 def choose_threshold(

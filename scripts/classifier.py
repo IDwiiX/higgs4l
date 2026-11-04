@@ -12,7 +12,6 @@ import numpy as np
 from higgs4l.data import ROOT, load_config
 from higgs4l.ml import (
     FEATURES,
-    asimov_z,
     category_inputs,
     chi2_weighted,
     choose_threshold,
@@ -20,7 +19,13 @@ from higgs4l.ml import (
     fit_classifier,
     weighted_roc,
 )
-from higgs4l.stats import bin_edges, category_model, shape_inputs, shape_model
+from higgs4l.stats import (
+    asimov_z,
+    bin_edges,
+    category_model,
+    shape_inputs,
+    shape_model,
+)
 
 
 def half(events, mask):
